@@ -1,9 +1,11 @@
 const path = require('path')
-const htmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
-    mode:'production',
+    mode: 'production',
     entry: {
         index: './lib/index.tsx'
+    },
+    resolve: {
+        extensions: ['.js', '.jsx', '.tsx', '.ts']
     },
     output: {
         path: path.resolve(__dirname, 'dist/lib'),
@@ -17,8 +19,5 @@ module.exports = {
                 loader: 'awesome-typescript-loader'
             }
         ]
-    },
-    plugins: [new htmlWebpackPlugin({
-        template: 'index.html'
-    })]
+    }
 }

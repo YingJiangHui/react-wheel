@@ -1,4 +1,4 @@
-console.log('hi')
-const div = document.createElement('div')
-div.innerText= 'div'
-document.body.appendChild(div)
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Button from './button'
+ReactDOM.render(<Button></Button>,document.getElementById('root'))

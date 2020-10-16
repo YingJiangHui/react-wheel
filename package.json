@@ -1,18 +1,20 @@
 {
   "name": "react-wheel",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/lib/index",
+  "types": "dist/lib/index",
   "repository": "git@github.com:YingJiangHui/react-wheel.git",
   "author": "dark <473380917@qq.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server",
-    "build": "webpack"
+    "start": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.dev.js",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js"
   },
   "devDependencies": {
     "@types/react": "^16.9.52",
     "@types/react-dom": "^16.9.8",
     "awesome-typescript-loader": "^5.2.1",
+    "cross-env": "^7.0.2",
     "html-webpack-plugin": "^3.2.0",
     "typescript": "^3.3.3333",
     "webpack": "^4.29.6",
