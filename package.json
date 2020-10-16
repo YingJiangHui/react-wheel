@@ -1,0 +1,8 @@
+{
+  "name": "react-wheel",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:YingJiangHui/react-wheel.git",
+  "author": "dark <473380917@qq.com>",
+  "license": "MIT"
+}
