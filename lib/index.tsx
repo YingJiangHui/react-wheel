@@ -1,4 +1,16 @@
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
-import Button from './button'
-ReactDOM.render(<Button></Button>,document.getElementById('root'))
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Icon from './Icon';
+
+function App() {
+  return (
+    <div>
+      <Icon name='pay'/>
+      <Icon name='wechat'/>
+    </div>
+  );
+}
+
+ReactDOM.render(
+  <App/>
+  , document.getElementById('root'));
