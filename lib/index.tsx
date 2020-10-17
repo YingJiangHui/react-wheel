@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 import Icon from './Icon';
 
 function App() {
+  const fn:React.MouseEventHandler= (e)=>{
+    console.log((e.target as SVGUseElement).href)
+  }
   return (
     <div>
-      <Icon name='pay'/>
-      <Icon name='wechat'/>
+      <Icon name='pay' onClick={fn}/>
     </div>
   );
 }
