@@ -15,4 +15,10 @@ describe('测试classes函数',()=>{
   it('接收 多个奇怪的参数',()=>{
     expect(classes('aaa','中文',false,null)).toEqual('aaa 中文')
   })
+  it('接收 数组',()=>{
+    expect(classes(['aaa','bbb','中文'])).toEqual('aaa bbb 中文')
+  })
+  it('接收 对象',()=>{
+    expect(classes({'aaa':false,'bbb':true,'ddd':true})).toEqual('bbb ddd')
+  })
 })
