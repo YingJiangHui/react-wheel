@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 function button(){
   return <div>按钮</div>
 }
