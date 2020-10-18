@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`测试icon icon代码快照是否正确 1`] = `
+<svg
+  className="xxx-icon"
+>
+  <use
+    xlinkHref="#pay"
+  />
+</svg>
+`;

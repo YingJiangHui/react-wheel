@@ -1,7 +1,7 @@
 import React, {FunctionComponent} from 'react';
 import './importIcons';
 import './icon.scss';
-import classes from './helper/classes'
+import classes from '../helper/classes'
 interface Props extends React.HTMLAttributes<SVGElement>{
   name: string
 }

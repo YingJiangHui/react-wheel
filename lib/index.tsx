@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Icon from './Icon';
+import Icon from './icon/Icon';
 
 function App() {
   const fn:React.MouseEventHandler= (e)=>{
