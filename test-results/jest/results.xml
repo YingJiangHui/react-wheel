@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="11" failures="0" errors="0" time="15.512">
+  <testsuite name="button" errors="0" failures="0" skipped="0" timestamp="2020-10-18T12:25:14" time="9.208" tests="1">
+    <testcase classname="button 第一个测试用例" name="button 第一个测试用例" time="0.015">
+    </testcase>
+  </testsuite>
+  <testsuite name="测试classes函数" errors="0" failures="0" skipped="0" timestamp="2020-10-18T12:25:14" time="9.562" tests="7">
+    <testcase classname="测试classes函数 接收 0 个参数" name="测试classes函数 接收 0 个参数" time="0.007">
+    </testcase>
+    <testcase classname="测试classes函数 接收 1 个参数" name="测试classes函数 接收 1 个参数" time="0.001">
+    </testcase>
+    <testcase classname="测试classes函数 接收 2 个参数" name="测试classes函数 接收 2 个参数" time="0.001">
+    </testcase>
+    <testcase classname="测试classes函数 接收 undefined" name="测试classes函数 接收 undefined" time="0.001">
+    </testcase>
+    <testcase classname="测试classes函数 接收 多个奇怪的参数" name="测试classes函数 接收 多个奇怪的参数" time="0">
+    </testcase>
+    <testcase classname="测试classes函数 接收 数组" name="测试classes函数 接收 数组" time="0.001">
+    </testcase>
+    <testcase classname="测试classes函数 接收 对象" name="测试classes函数 接收 对象" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="测试按钮" errors="0" failures="0" skipped="0" timestamp="2020-10-18T12:25:14" time="9.607" tests="1">
+    <testcase classname="测试按钮 按钮快照" name="测试按钮 按钮快照" time="0.042">
+    </testcase>
+  </testsuite>
+  <testsuite name="测试icon" errors="0" failures="0" skipped="0" timestamp="2020-10-18T12:25:14" time="9.799" tests="2">
+    <testcase classname="测试icon icon代码快照是否正确" name="测试icon icon代码快照是否正确" time="0.059">
+    </testcase>
+    <testcase classname="测试icon 点击icon" name="测试icon 点击icon" time="0.117">
+    </testcase>
+  </testsuite>
+</testsuites>
