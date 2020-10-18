@@ -8,7 +8,7 @@ function App() {
   }
   return (
     <div>
-      <Icon name='pay' onClick={fn}/>
+      <Icon name='pay' onClick={fn} onMouseEnter={()=>console.log('enter')} onMouseLeave={()=>console.log('leave')}/>
     </div>
   );
 }
