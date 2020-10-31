@@ -1,0 +1,10 @@
+.x{
+  &-button{
+    border-radius: 3px;
+    border: 1px solid fade_out(#000,0.5);
+    outline: none;
+    background: #fff;
+    padding: 0.4em 1em;
+    cursor:pointer;
+  }
+}

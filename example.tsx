@@ -7,7 +7,6 @@ import ButtonExample from './lib/button/button.example';
 const App: React.FC = () => {
   return (
     <Router>
-
       <header></header>
       <aside>
         <Link to='/icon'>icon</Link>
