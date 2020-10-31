@@ -1,9 +1,11 @@
 {
   "name": "react-wheel77",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "main": "dist/lib/index",
   "types": "dist/lib/index",
-  "files": ["/dist/**/*"],
+  "files": [
+    "/dist/**/*"
+  ],
   "repository": "git@github.com:YingJiangHui/react-wheel.git",
   "author": "dark <473380917@qq.com>",
   "license": "MIT",
