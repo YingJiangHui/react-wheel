@@ -1,8 +1,9 @@
 {
-  "name": "react-wheel",
-  "version": "1.0.0",
+  "name": "react-wheel77",
+  "version": "0.0.2",
   "main": "dist/lib/index",
   "types": "dist/lib/index",
+  "files": ["/dist/**/*"],
   "repository": "git@github.com:YingJiangHui/react-wheel.git",
   "author": "dark <473380917@qq.com>",
   "license": "MIT",
@@ -10,7 +11,7 @@
     "test": "cross-env NODE_ENV=test jest --config=jest.config.js --runInBand",
     "start": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.dev.js",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
-    "ci": "cross-env NODE_ENV=test JEST_JUNIT_OUTPUT=./test-results/jest/results.xml jest --config=jest.config.js"
+    "ci": "cross-env NODE_ENV=test JEST_JUNIT_OUTPUT=./test-results/jest/results.xml jest --config=jest.config.ci.js"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.3.4",

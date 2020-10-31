@@ -1,18 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Icon from './icon/Icon';
-
-function App() {
-  const fn:React.MouseEventHandler= (e)=>{
-    console.log((e.target as SVGUseElement).href)
-  }
-  return (
-    <div>
-      <Icon name='pay' onClick={fn} onMouseEnter={()=>console.log('enter')} onMouseLeave={()=>console.log('leave')}/>
-    </div>
-  );
-}
-
-ReactDOM.render(
-  <App/>
-  , document.getElementById('root'));
+export {default as Icon} from './icon/Icon'
+// import React from 'react'
+// import ReactDOM from 'react-dom'
+// import Icon from './icon/Icon'
+//
+// const App = ()=>{
+//   return (
+//     <div>
+//       <Icon name={'pay'}/>
+//     </div>
+//   )
+// }
+//
+//
+// ReactDOM.render(<App/>,document.querySelector('#root'))
