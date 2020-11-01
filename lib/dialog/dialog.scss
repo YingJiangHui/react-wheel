@@ -1,0 +1,72 @@
+.x-dialog {
+  &-mask {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: fade_out(#000, 0.5);
+  }
+
+  &-wrapper {
+    min-width: 20em;
+    background: #fff;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+  }
+
+  &-close {
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background: transparent;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(-1em ,1em);
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    color: rgba(0, 0, 0, 0.5);
+
+    & > svg {
+      width: inherit;
+      height: inherit;
+      fill: currentColor;
+    }
+  }
+
+  &-header {
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 17px;
+    padding:  1em 1em;
+  }
+
+  &-body {
+    padding: 1em 1em;
+    min-height: 3em;
+  }
+
+  &-footer {
+    border-top: 1px solid #f0f0f0;
+    padding: 1em 1em;
+    text-align: end;
+  }
+
+  &-button {
+    margin-left: 4px;
+    margin-right: 4px;
+    &:first-child{
+      margin-left: 0;
+    }
+    &:last-child{
+      margin-right: 0;
+    }
+  }
+}
