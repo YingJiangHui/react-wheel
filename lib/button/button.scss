@@ -11,14 +11,15 @@
 
     &-primary {
       $level:#40a9ff;
+      &.x-button-full{
+        background: $level;
+        color: white;
+      }
       border: 1px solid $level;
       color: $level;
       box-shadow: 0 0 0 6px rgba($level, 0);
       transition: 0.5s;
-      &-full{
-        background: $level;
-        color: white;
-      }
+
       &:active {
         transition: none;
         box-shadow: 0 0 0 0 rgba($level, 0.5);
