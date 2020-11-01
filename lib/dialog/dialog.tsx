@@ -2,7 +2,6 @@ import React, {ReactElement} from 'react';
 import ReactDOM from 'react-dom';
 import Icon from '../icon/Icon';
 import {scopedClass} from '../helper/scopedClass';
-import classes from '../helper/classes';
 import './dialog.scss';
 import Button from '../button/button';
 
@@ -69,8 +68,8 @@ const modal = ({content, yes, no, title,buttons,clickMaskClose=true}: { content:
   rootNode.appendChild(div);
   if(!buttons){
     buttons = [
-      <Button onClick={onYes} className={classes(sc('button'))} type='primary' full>yes</Button>,
-      <Button onClick={onNo} className={classes(sc('button'))}>no</Button>
+      <Button onClick={onYes} className={sc('button')} type='primary' full>yes</Button>,
+      <Button onClick={onNo} className={sc('button')}>no</Button>
     ]
   }
 
@@ -91,8 +90,8 @@ const confirm = ({content, yes, title, no,clickMaskClose=true}: { content: strin
     no&&no()
   }
   const buttons = [
-    <Button onClick={onYes} className={classes(sc('button'))} type='primary' full>yes</Button>,
-    <Button onClick={onNo} className={classes(sc('button'))}>no</Button>
+    <Button onClick={onYes} className={sc('button')} type='primary' full>yes</Button>,
+    <Button onClick={onNo} className={sc('button')}>no</Button>
   ];
   const close = modal({content, yes, title, no,buttons,clickMaskClose});
 };
@@ -106,7 +105,7 @@ const alert = ({content, yes,clickMaskClose=false,title}: { content: string, tit
     yes && yes();
   };
   const buttons = [
-    <Button onClick={onYes} className={classes(sc('button'))} type='primary' full>yes</Button>
+    <Button onClick={onYes} className={sc('button')} type='primary' full>yes</Button>
   ];
   const close = modal({content,yes,buttons,title,clickMaskClose})
 };

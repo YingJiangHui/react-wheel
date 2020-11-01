@@ -27,8 +27,8 @@ export default () => {
     });
   };
   return (<div>
-    <Button onClick={onModal}>modal</Button>
-    <Button onClick={onAlert}>alert</Button>
+    <Button onClick={onModal} type={'primary'} full>modal</Button>
+    <Button onClick={onAlert} >alert</Button>
     <Button onClick={onConfirm}>confirm</Button>
   </div>)
 }
