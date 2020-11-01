@@ -1,14 +1,34 @@
-import React, {useState} from 'react';
-import Dialog from './dialog';
+import React from 'react';
+import {confirm, modal, alert} from './dialog';
 import Button from '../button/button';
 
-export default ()=>{
-  const [x,setX] = useState(false)
-  return (
-    <div>
-      <Button onClick={()=>setX(()=>true)}>Dialog</Button>
-      <Dialog title={'base dialog'} visible={x}>
-        aaa
-      </Dialog>
+export default () => {
+  const onModal = () => {
+    const close = modal({
+      content: (<Button onClick={() => close()}>close</Button>),
+      title: 'modal',
+      yes: () => {console.log('yes');}
+    });
+  };
+
+  const onAlert = () => {
+    alert({
+      content: ('alert'),
+      title: 'modal',
+      yes: () => {console.log('yes');}
+    });
+  };
+
+  const onConfirm = () => {
+     confirm({
+      content:'confirm',
+      title: 'modal',
+      yes: () => {console.log('yes');}
+    });
+  };
+  return (<div>
+    <Button onClick={onModal}>modal</Button>
+    <Button onClick={onAlert}>alert</Button>
+    <Button onClick={onConfirm}>confirm</Button>
   </div>)
 }
