@@ -42,10 +42,11 @@ describe('测试scopedClass函数',()=>{
       'fff':{}
     }
     expect(sc(obj)).toEqual('x-aaa x-ccc x-ddd x-eee x-fff')
-    console.log(sc(obj))
-
   })
   it('接收额外的class',()=>{
     expect(sc('aaa',{extra:['aaa','vvv']})).toEqual('x-aaa aaa vvv')
+  })
+  it('接收额外的class2',()=>{
+    expect(sc(undefined,{extra:['aaa']})).toEqual('x aaa')
   })
 })

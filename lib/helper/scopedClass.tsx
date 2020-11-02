@@ -14,6 +14,7 @@ const scopedClass = (prefix: string) =>
         .filter(Boolean)
         .join('-'))
       .concat(options&&options.extra&&options.extra||[])
+      .filter(Boolean)
       .join(' ');
   }
 export {scopedClass};
