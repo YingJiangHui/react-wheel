@@ -1,6 +1,6 @@
 {
   "name": "react-wheel77",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/lib/index",
   "types": "dist/lib/index",
   "files": [
