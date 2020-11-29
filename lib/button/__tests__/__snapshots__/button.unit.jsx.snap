@@ -2,6 +2,6 @@
 
 exports[`测试按钮 按钮快照 1`] = `
 <button
-  className="x-button"
+  className="makabaka-button"
 />
 `;
