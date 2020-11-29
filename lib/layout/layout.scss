@@ -2,10 +2,19 @@
   &-layout{
     display: flex;
     flex-direction: column;
+    width: 100%;
     .makabaka{
       &-content{
         flex-grow: 1;
       }
+    }
+
+  }
+  &-layout-hasAside{
+    flex-grow: 1;
+    flex-direction: row;
+    &-content{
+      flex-grow: 1;
     }
   }
 }

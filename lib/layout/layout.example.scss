@@ -1,11 +1,20 @@
 .example{
+  margin: 1em;
+    height: 500px;
   &-layout{
     height: 100%;
     .example{
       &-content{
-
+        background: rebeccapurple;
+        color: #fff;
+      }
+      &-header,&-footer{
+        background: rosybrown;
+        height: 80px;
+        color:#fff;
       }
     }
+
   }
 
 }
