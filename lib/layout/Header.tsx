@@ -1,10 +1,13 @@
 import React from 'react'
+import {scopedClass} from '../helper/scopedClass';
+const cn = scopedClass('makabaka-header')
 interface HeaderProps {
-
+  className?:string
 }
-const Header:React.FC<HeaderProps> = ({children})=>{
+const Header:React.FC<HeaderProps> = ({children,className=''})=>{
   return (
-    <div>{children}</div>
+    <div className={cn('',{extra:[className]})}> {children}</div>
   )
 }
+Header.defaultProps = {className:''}
 export default Header

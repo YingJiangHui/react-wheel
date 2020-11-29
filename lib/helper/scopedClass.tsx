@@ -6,8 +6,8 @@ interface Options{
   extra?:string[]
 }
 const scopedClass = (prefix: string) =>
-  (cn?: string | ClassToggles,options?:Options) =>{
-    return Object.entries(cn instanceof Object ? cn : {[cn||'']: true})
+  (cn?: string | ClassToggles,options?:Options) =>
+     Object.entries(cn instanceof Object ? cn : {[cn||'']: true})
       .filter(kv => kv[1] !== false)
       .map(kv=>kv[0])
       .map(cn => [prefix, cn]
@@ -16,5 +16,6 @@ const scopedClass = (prefix: string) =>
       .concat(options&&options.extra&&options.extra||[])
       .filter(Boolean)
       .join(' ');
-  }
+
+
 export {scopedClass};

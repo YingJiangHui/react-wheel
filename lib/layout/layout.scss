@@ -1,0 +1,11 @@
+.makabaka{
+  &-layout{
+    display: flex;
+    flex-direction: column;
+    .makabaka{
+      &-content{
+        flex-grow: 1;
+      }
+    }
+  }
+}

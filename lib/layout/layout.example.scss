@@ -1,0 +1,11 @@
+.example{
+  &-layout{
+    height: 100%;
+    .example{
+      &-content{
+
+      }
+    }
+  }
+
+}

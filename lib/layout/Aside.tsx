@@ -1,10 +1,13 @@
 import React from 'react'
+import {scopedClass} from '../helper/scopedClass';
+const cn = scopedClass('makabaka-aside')
 interface AsideProps {
-
+ className?:string
 }
- const Aside:React.FC<AsideProps> = ({children})=>{
+ const Aside:React.FC<AsideProps> = ({children,className=''})=>{
   return (
-    <div>{children}</div>
+    <div className={cn('',{extra:[className]})}>{children}</div>
   )
 }
+Aside.defaultProps ={className:''}
 export default Aside
