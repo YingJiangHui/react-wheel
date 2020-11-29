@@ -1,4 +1,4 @@
-.x {
+.makabaka {
   $level: #000;
 
   &-button {
@@ -11,7 +11,7 @@
 
     &-primary {
       $level:#40a9ff;
-      &.x-button-full{
+      &-full{
         background: $level;
         color: white;
       }

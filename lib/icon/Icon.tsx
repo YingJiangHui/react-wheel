@@ -8,7 +8,7 @@ interface Props extends React.HTMLAttributes<SVGElement>{
 
 const Icon: FunctionComponent<Props> = ({className,name,...restProps}) => {
   return (
-    <svg className={classes('xxx-icon',className)} {...restProps}>
+    <svg className={classes('makabaka-icon',className)} {...restProps}>
       <use xlinkHref={'#' + name} />
     </svg>
   );

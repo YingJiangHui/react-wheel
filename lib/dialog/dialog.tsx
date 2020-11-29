@@ -13,7 +13,7 @@ interface Props {
   buttons?: Array<ReactElement>
 }
 
-const sc = scopedClass('x-dialog');
+const sc = scopedClass('makabaka-dialog');
 const Dialog: React.FC<Props> = ({children, visible, title, onClose, clickMaskClose, buttons}) => {
   const onClickMask = (e: React.MouseEvent) => {
     clickMaskClose && onClose && onClose(e);
