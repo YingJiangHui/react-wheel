@@ -7,6 +7,7 @@ import './layout.example.scss';
 import Aside from './Aside';
 
 const LayoutExample = () => {
+
   return (
     <>
       <div className={'example'}>
@@ -49,4 +50,5 @@ const LayoutExample = () => {
     </>
   );
 };
+
 export default LayoutExample;

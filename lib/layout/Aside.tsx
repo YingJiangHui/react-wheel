@@ -9,5 +9,4 @@ interface AsideProps {
     <div className={cn('',{extra:[className]})}>{children}</div>
   )
 }
-Aside.defaultProps ={className:''}
 export default Aside

@@ -4,10 +4,11 @@ const cn = scopedClass('makabaka-header')
 interface HeaderProps {
   className?:string
 }
+
 const Header:React.FC<HeaderProps> = ({children,className=''})=>{
   return (
     <div className={cn('',{extra:[className]})}> {children}</div>
   )
 }
-Header.defaultProps = {className:''}
+
 export default Header
