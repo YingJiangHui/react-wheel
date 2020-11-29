@@ -2,7 +2,7 @@
 
 exports[`测试icon icon代码快照是否正确 1`] = `
 <svg
-  className="xxx-icon"
+  className="makabaka-icon"
 >
   <use
     xlinkHref="#pay"
