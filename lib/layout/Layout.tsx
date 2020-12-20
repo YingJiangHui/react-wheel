@@ -2,6 +2,9 @@ import React, {ReactElement} from 'react';
 import {scopedClass} from '../helper/scopedClass'
 import './layout.scss'
 import Aside from './Aside';
+import Header from './Header';
+import Footer from './Footer';
+import Content from './Content';
 interface LayoutProps{
   className?:string
   children:ReactElement|Array<ReactElement>
@@ -24,3 +27,5 @@ const Layout:React.FC<LayoutProps> = ({children,className=''})=>{
 }
 
 export default Layout
+
+export {Header,Footer,Content,Aside,Layout}

@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::before {
+  box-sizing: border-box;
+}
+html,body{
+  height: 100%;
+}
+*::after {
+  box-sizing: border-box;
+}
+a{
+  text-decoration: none;
+  color: #000;
+}
+$main-color:#ef7070;
+$border-color:#eee;
+.docPage {
+
+}
+.docHeader{
+  border-bottom: 1px solid $border-color;
+  box-shadow: 0 0 4px rgb(0,0,0,0.2);
+  padding: 1em;
+}
+.docAside{
+  border-right: 1px solid $border-color;
+  width: 200px;
+  >.docNavLinks {
+    display: flex;
+    flex-direction: column;
+    >a{
+      padding: 0.4em 0.7em;
+      font-size: 17px;
+      color: $main-color;
+      &.active{
+        color: #fff;
+        background: $main-color;
+      }
+    }
+  }
+}
+
+.docFooter{
+  border-top: 1px solid $border-color;
+  padding: 1em;
+}
