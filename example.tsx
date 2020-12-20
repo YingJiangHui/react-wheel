@@ -4,9 +4,9 @@ import ReactDOM from 'react-dom';
 import IconExample from './lib/icon/icon.example';
 import ButtonExample from './lib/button/button.example';
 import DialogExample from './lib/dialog/dialog.example'
-import LayoutExample from './lib/layout/Layout.example';
 import {Layout, Header, Content, Aside, Footer } from './lib/layout/Layout';
 import './global.scss'
+import LayoutDemo from "./lib/layout/layout.demo";
 const App: React.FC = () => {
   return (
     <Router>
@@ -28,7 +28,7 @@ const App: React.FC = () => {
               <Route component={IconExample} path={'/icon'}/>
               <Route component={ButtonExample} path={'/button'}/>
               <Route component={DialogExample} path={'/dialog'}/>
-              <Route component={LayoutExample} path={'/layout'}/>
+              <Route component={LayoutDemo} path={'/layout'}/>
             </Content>
           </Layout>
           <Footer className="docFooter">&copy;应江辉</Footer>

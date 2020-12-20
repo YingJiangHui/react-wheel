@@ -1,15 +1,20 @@
+$main-color:#ef7070;
 .example{
-  margin: 1em;
     height: 500px;
   &-layout{
     height: 100%;
     .example{
       &-content{
-        background: rebeccapurple;
+        background: fade-out($main-color,0.2);
+        color: #fff;
+      }
+      &-aside{
+        width: 100px;
+        background: $main-color;
         color: #fff;
       }
       &-header,&-footer{
-        background: rosybrown;
+        background: fade-out($main-color,0.4) ;
         height: 80px;
         color:#fff;
       }
