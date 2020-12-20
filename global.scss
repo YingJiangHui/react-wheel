@@ -29,7 +29,7 @@ $border-color:#eee;
 }
 .docAside{
   border-right: 1px solid $border-color;
-  width: 200px;
+  width: 266px;
   >.docNavLinks {
     display: flex;
     flex-direction: column;
@@ -43,6 +43,10 @@ $border-color:#eee;
       }
     }
   }
+}
+
+.docContent{
+  padding: 64px 128px;
 }
 
 .docFooter{

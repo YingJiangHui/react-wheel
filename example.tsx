@@ -24,11 +24,13 @@ const App: React.FC = () => {
                 <NavLink to={'/layout'}>layout</NavLink>
               </div>
             </Aside>
-            <Content>
-              <Route component={IconExample} path={'/icon'}/>
-              <Route component={ButtonExample} path={'/button'}/>
-              <Route component={DialogExample} path={'/dialog'}/>
-              <Route component={LayoutDemo} path={'/layout'}/>
+            <Content className="docContent">
+              <div>
+                <Route component={IconExample} path={'/icon'}/>
+                <Route component={ButtonExample} path={'/button'}/>
+                <Route component={DialogExample} path={'/dialog'}/>
+                <Route component={LayoutDemo} path={'/layout'}/>
+              </div>
             </Content>
           </Layout>
           <Footer className="docFooter">&copy;应江辉</Footer>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState} from 'react'
 import Demo from "../Demo";
 
 import LayoutExample1 from './Layout.example.1'
@@ -7,20 +7,16 @@ import LayoutExample3 from './Layout.example.3';
 import LayoutExample4 from './Layout.example.4';
 
 const LayoutDemo = () => {
+  const [components] = useState([<LayoutExample1/>,<LayoutExample2/>,<LayoutExample3/>,<LayoutExample4/>])
   return (
     <>
-      <Demo code={require('!!raw-loader!./Layout.example.1.tsx').default}>
-        <LayoutExample1/>
-      </Demo>
-      <Demo code={require('!!raw-loader!./Layout.example.2.tsx').default}>
-        <LayoutExample2/>
-      </Demo>
-      <Demo code={require('!!raw-loader!./Layout.example.3.tsx').default}>
-        <LayoutExample3/>
-      </Demo>
-      <Demo code={require('!!raw-loader!./Layout.example.4.tsx').default}>
-        <LayoutExample4/>
-      </Demo>
+      {
+        components.map((item,index)=>
+          <Demo code={require(`!!raw-loader!./Layout.example.${index+1}.tsx`).default}>
+            {item}
+          </Demo>
+        )
+      }
     </>
   )
 }

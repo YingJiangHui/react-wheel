@@ -55,7 +55,7 @@ const Demo:React.FC<Props> = ({code,children})=>{
       <div>
         {children}
       </div>
-      <Button type='primary' full onClick={()=>{setVisibleCode(v=>!v)}}>{visibleCode?'隐藏':'显示'}</Button>
+      <Button type='primary' full onClick={()=>{setVisibleCode(v=>!v)}}>{visibleCode?'隐藏源代码':'查看源代码'}</Button>
       <div>
         {visibleCode?<CodeComponent code={code}/>:''}
       </div>
