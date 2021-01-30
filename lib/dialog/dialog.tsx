@@ -18,7 +18,7 @@ const Dialog: React.FC<Props> = ({children, visible, title, onClose, clickMaskCl
   const onClickMask = (e: React.MouseEvent) => {
     clickMaskClose && onClose && onClose(e);
   };
-  const component = ReactDOM.createPortal(
+  return ReactDOM.createPortal(
     <>
       {visible ?
         <>
@@ -37,9 +37,7 @@ const Dialog: React.FC<Props> = ({children, visible, title, onClose, clickMaskCl
         </>
         : ''}
     </>
-    , document.querySelector('#root') as HTMLElement);
-
-  return component;
+    , document.querySelector('body') as HTMLElement);
 };
 Dialog.defaultProps = {
   clickMaskClose: true
@@ -64,12 +62,12 @@ const modal = ({content, yes, no, title,buttons,clickMaskClose=true}: { content:
     div.remove();
   };
   const div = document.createElement('div');
-  const rootNode = document.querySelector('#root') as HTMLDivElement;
+  const rootNode:HTMLBodyElement = document.querySelector('body') as HTMLBodyElement;
   rootNode.appendChild(div);
   if(!buttons){
     buttons = [
-      <Button onClick={onYes} className={sc('button')} type='primary' full>yes</Button>,
-      <Button onClick={onNo} className={sc('button')}>no</Button>
+      <Button onClick={onYes} className={sc('button')} data-test-yes="toggle" type='primary' full>yes</Button>,
+      <Button onClick={onNo} className={sc('button')} data-test-no="toggle">no</Button>
     ]
   }
 
@@ -83,15 +81,15 @@ const modal = ({content, yes, no, title,buttons,clickMaskClose=true}: { content:
 const confirm = ({content, yes, title, no,clickMaskClose=true}: { content: string, title?: string, buttons?: Array<ReactElement>, no?: () => void, yes?: () => void ,clickMaskClose?:boolean}) => {
   const onYes = ()=>{
     close()
-    yes &&yes()
+    yes?.()
   }
   const onNo = ()=>{
     close()
-    no&&no()
+    no?.()
   }
   const buttons = [
-    <Button onClick={onYes} className={sc('button')} type='primary' full>yes</Button>,
-    <Button onClick={onNo} className={sc('button')}>no</Button>
+    <Button onClick={onYes} className={sc('button')} data-test-yes="toggle" type='primary' full>yes</Button>,
+    <Button onClick={onNo} className={sc('button')} data-test-no="toggle">no</Button>
   ];
   const close = modal({content, yes, title, no,buttons,clickMaskClose});
 };
@@ -105,7 +103,7 @@ const alert = ({content, yes,clickMaskClose=false,title}: { content: string, tit
     yes && yes();
   };
   const buttons = [
-    <Button onClick={onYes} className={sc('button')} type='primary' full>yes</Button>
+    <Button onClick={onYes} className={sc('button')} data-test-yes="toggle" type='primary' full>yes</Button>
   ];
   const close = modal({content,yes,buttons,title,clickMaskClose})
 };

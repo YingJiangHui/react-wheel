@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dialog组件 弹出框快照 1`] = `
+Array [
+  <div
+    className="makabaka-dialog-mask"
+    onClick={[Function]}
+  />,
+  <div
+    className="makabaka-dialog-wrapper"
+  >
+    <button
+      className="makabaka-dialog-close"
+    >
+      <svg
+        className="makabaka-icon"
+      >
+        <use
+          xlinkHref="#close"
+        />
+      </svg>
+    </button>
+    <header
+      className="makabaka-dialog-header"
+    >
+      title
+    </header>
+    <main
+      className="makabaka-dialog-body"
+    >
+      content
+    </main>
+  </div>,
+]
+`;
