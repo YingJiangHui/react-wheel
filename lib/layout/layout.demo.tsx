@@ -12,7 +12,7 @@ const LayoutDemo = () => {
     <>
       {
         components.map((item,index)=>
-          <Demo code={require(`!!raw-loader!./Layout.example.${index+1}.tsx`).default}>
+          <Demo key={index} code={require(`!!raw-loader!./Layout.example.${index+1}.tsx`).default}>
             {item}
           </Demo>
         )
