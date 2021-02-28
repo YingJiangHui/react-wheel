@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Layout测试用例 上中下加上侧边栏 1`] = `
+<div
+  className="makabaka-layout"
+>
+  <div
+    className="makabaka-header"
+  >
+     
+    Header
+  </div>
+  <div
+    className="makabaka-layout-hasAside makabaka-layout"
+  >
+    <div
+      className="makabaka-aside"
+    >
+      Aside
+    </div>
+    <div
+      className="makabaka-content"
+    >
+      Content
+    </div>
+  </div>
+  <div
+    className="makabaka-footer"
+  >
+    Footer
+  </div>
+</div>
+`;
+
+exports[`Layout测试用例 上中下加上右边侧边栏 1`] = `
+<div
+  className="makabaka-layout"
+>
+  <div
+    className="makabaka-header"
+  >
+     
+    Header
+  </div>
+  <div
+    className="makabaka-layout-hasAside makabaka-layout"
+  >
+    <div
+      className="makabaka-content"
+    >
+      Content
+    </div>
+    <div
+      className="makabaka-aside"
+    >
+      Aside
+    </div>
+  </div>
+  <div
+    className="makabaka-footer"
+  >
+    Footer
+  </div>
+</div>
+`;
+
+exports[`Layout测试用例 上中下加侧边栏自适应高度 1`] = `
+<div
+  className="makabaka-layout-hasAside makabaka-layout"
+>
+  <div
+    className="makabaka-aside"
+  >
+    Aside
+  </div>
+  <div
+    className="makabaka-layout"
+  >
+    <div
+      className="makabaka-header"
+    >
+       
+      Header
+    </div>
+    <div
+      className="makabaka-content"
+    >
+      Content
+    </div>
+    <div
+      className="makabaka-footer"
+    >
+      Footer
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Layout测试用例 上中下布局 1`] = `
+<div
+  className="makabaka-layout"
+>
+  <div
+    className="makabaka-header"
+  >
+     
+    Header
+  </div>
+  <div
+    className="makabaka-content"
+  >
+    Content
+  </div>
+  <div
+    className="makabaka-footer"
+  >
+    Footer
+  </div>
+</div>
+`;
