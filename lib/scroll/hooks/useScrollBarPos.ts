@@ -17,8 +17,7 @@ const useScrollBarPos = ()=>{
     const viewHeight = current!.getBoundingClientRect().height;
     const scrollBarMaxTop = (scrollHeight-viewHeight)/scrollHeight*viewHeight
     if(number>=scrollBarMaxTop)return;
-    current!.scrollTop = scrollHeight*number/viewHeight
-    _setBarTop(()=>number)
+    _setBarTop(number)
   }
   useEffect(()=>{
     const {current:containerCurrent} =containerRef
@@ -28,9 +27,14 @@ const useScrollBarPos = ()=>{
       isMovingRef.current = false
     })
     document.addEventListener('mousemove',(e)=>{
+      const {current} = containerRef
+      const {scrollHeight} = current!
+      const viewHeight = current!.getBoundingClientRect().height;
       if(!isMovingRef.current)return;
       const diff = e.clientY-scrollBarFirstYRef.current
-      setBarTop(diff+scrollBarFirstTopRef.current)
+      const newScrollBarTop = diff+scrollBarFirstTopRef.current
+      setBarTop(newScrollBarTop)
+      current!.scrollTop = scrollHeight*newScrollBarTop/viewHeight
     })
   },[])
   const getScrollContainerProps:divFunc=(props) =>{
@@ -38,7 +42,7 @@ const useScrollBarPos = ()=>{
       onScroll:(e)=>{
         const {currentTarget} = e
         setScrollBarHeight(Math.pow(currentTarget.clientHeight,2)/currentTarget.scrollHeight)
-        _setBarTop(currentTarget.scrollTop*currentTarget.clientHeight/currentTarget.scrollHeight)
+        setBarTop(currentTarget.scrollTop*currentTarget.clientHeight/currentTarget.scrollHeight)
         props?.onScroll?.(e)
       },
       ref:containerRef,
