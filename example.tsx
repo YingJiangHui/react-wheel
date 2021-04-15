@@ -39,7 +39,7 @@ const App: React.FC = () => {
               </div>
             </Content>
           </Layout>
-          <Footer className="docFooter">&copy; 应江辉</Footer>
+          <Footer className="docFooter">&copy; YingJiangHui</Footer>
         </Layout>
       </div>
     </Router>

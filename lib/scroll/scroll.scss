@@ -1,0 +1,16 @@
+.makabaka {
+  &-scroll {
+    height: 80vh;
+    position: relative;
+    border: 1px solid red;
+    overflow: hidden;
+    &-inner {
+      border: 1px solid blue;
+      overflow: auto;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+}

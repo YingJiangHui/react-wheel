@@ -1,14 +1,20 @@
 import React,{FC} from 'react'
+import Scroll from './scroll';
 
-interface ScrollProps {
+interface scrollExampleProps {
 
 }
 
-const Scroll:FC<ScrollProps> = (props)=>{
-    
+const scrollExample:FC<scrollExampleProps> = (props)=>{
     return (
-    <>scroll</>
+    <div style={{width:200}}>
+        <Scroll>
+            {
+                new Array(40).fill(1).map((_,index)=>(<div key={index}>{index}</div>))
+            }
+        </Scroll>
+    </div>
     )
 }
 
-export default Scroll
+export default scrollExample
