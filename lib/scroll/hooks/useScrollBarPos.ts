@@ -1,53 +1,64 @@
 import {useEffect, useRef, useState} from 'react';
 import React from 'react'
 
+type ScrollContainer = { scrollTop?: number, viewHeight?: number, scrollHeight?: number }
 type divFunc = (props?: React.HTMLAttributes<HTMLDivElement>) => React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 const useScrollBarPos = () => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const scrollBarRef = useRef<HTMLDivElement>(null)
   const isDraggingRef = useRef<boolean>(false)
-  const scrollBarFirstYRef = useRef(0)
-  const scrollBarFirstTopRef = useRef(0)
-  const [scrollBarHeight, setScrollBarHeight] = useState(0)
+  const barFirstYRef = useRef(0)
+  const barFirstTopRef = useRef(0)
+  const [barHeight, setBarHeight] = useState(0)
   const [barTop, _setBarTop] = useState(0)
-  
+  const getContainerInfo = () => {
+    const {current} = containerRef
+    return {
+      current,
+      viewHeight: current!.getBoundingClientRect().height,
+      scrollHeight: current!.scrollHeight,
+      scrollTop: current!.scrollTop
+    }
+  }
   const setBarTop = (number: number) => {
     if (number <= 0) return;
-    const {current} = containerRef
-    const {scrollHeight} = current!
-    const viewHeight = current!.getBoundingClientRect().height;
+    const {scrollHeight,viewHeight} = getContainerInfo()
     const scrollBarMaxTop = (scrollHeight - viewHeight) / scrollHeight * viewHeight
     if (number >= scrollBarMaxTop) return;
     _setBarTop(number)
   }
-  
   const onMouseUpBar = () => {
     isDraggingRef.current = false
   }
   const onMouseMoveBar = (e: MouseEvent) => {
-    const {current} = containerRef
-    const {scrollHeight} = current!
-    const viewportHeight = current!.getBoundingClientRect().height;
+    const {scrollHeight,viewHeight,current} = getContainerInfo()
     if (!isDraggingRef.current) return;
-    const diff = e.clientY - scrollBarFirstYRef.current
-    const newScrollBarTop = diff + scrollBarFirstTopRef.current
+    const diff = e.clientY - barFirstYRef.current
+    const newScrollBarTop = diff + barFirstTopRef.current
     setBarTop(newScrollBarTop)
-    current!.scrollTop = scrollHeight * newScrollBarTop / viewportHeight
+    current!.scrollTop = scrollHeight * newScrollBarTop / viewHeight
   }
-  
+
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     isDraggingRef.current = true
-    scrollBarFirstYRef.current = e.clientY
-    scrollBarFirstTopRef.current = barTop
+    barFirstYRef.current = e.clientY
+    barFirstTopRef.current = barTop
   }
   const onSelectState = (e: Event) => {
     if (isDraggingRef.current)
       e.preventDefault()
   };
+  const calculateBarHeight = ({viewHeight = 0, scrollHeight = 0}: ScrollContainer) => {
+    return Math.pow(viewHeight, 2) / scrollHeight
+  }
+  const calculateBarTop = ({scrollTop = 0, viewHeight = 0, scrollHeight = 0}: ScrollContainer) => {
+    return scrollTop * viewHeight / scrollHeight
+  }
+  const setBarPosState = ({scrollTop, viewHeight, scrollHeight}: ScrollContainer) => {
+    setBarHeight(calculateBarHeight({viewHeight, scrollHeight}))
+    setBarTop(calculateBarTop({scrollTop, viewHeight, scrollHeight}))
+  }
   useEffect(() => {
-    const {current} = containerRef
-    setScrollBarHeight(Math.pow(current!.clientHeight, 2) / current!.scrollHeight)
-    setBarTop(current!.scrollTop * current!.clientHeight / current!.scrollHeight)
+    setBarPosState(getContainerInfo())
     document.addEventListener('mouseup', onMouseUpBar)
     document.addEventListener('mousemove', onMouseMoveBar)
     document.addEventListener('selectstart', onSelectState)
@@ -57,12 +68,11 @@ const useScrollBarPos = () => {
       document.removeEventListener('selectstart', onSelectState)
     }
   }, [])
+  
   const getScrollContainerProps: divFunc = (props) => {
     return {
       onScroll: (e) => {
-        const {currentTarget} = e
-        setScrollBarHeight(Math.pow(currentTarget.clientHeight, 2) / currentTarget.scrollHeight)
-        setBarTop(currentTarget.scrollTop * currentTarget.clientHeight / currentTarget.scrollHeight)
+        setBarPosState(getContainerInfo())
         props?.onScroll?.(e)
       },
       onSelect: (e) => {
@@ -75,14 +85,13 @@ const useScrollBarPos = () => {
   const getScrollBarProps: divFunc = (props) => {
     return {
       onMouseDown,
-      ref: scrollBarRef,
       ...props
     }
   }
   return {
     getScrollProps: getScrollContainerProps,
     getScrollBarProps,
-    scrollHeight: scrollBarHeight,
+    scrollHeight: barHeight,
     scrollTop: barTop
   }
 }
