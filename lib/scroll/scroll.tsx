@@ -14,6 +14,9 @@ const Scroll:FC<ScrollProps> = (props)=>{
     return (
     <div className={sc()}>
         <div className={sc("inner")} style={{right:-scrollBarWidth}}>{children}</div>
+        <div className={sc('track')} style={{width:scrollBarWidth}}>
+            <div className={sc('bar')} />
+        </div>
     </div>
     )
 }
