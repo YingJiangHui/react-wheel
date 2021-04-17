@@ -8,15 +8,15 @@ interface Props{
 }
 const useScrollBarPos = (props:Props) => {
   const {onPull} = props
-  const containerRef = useRef<HTMLDivElement>(null)
-  const isDraggingRef = useRef<boolean>(false)
-  const barFirstYRef = useRef(0)
-  const barFirstTopRef = useRef(0)
   const [barHeight, setBarHeight] = useState(0)
   const [barTop, _setBarTop] = useState(0)
   const [pullTop,_setPullTop] = useState(0)
-  const isPullRef = useRef(true)
-  const touchLastYRef = useRef(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const isDraggingRef = useRef<boolean>(false)
+  const barFirstClientYRef = useRef(0)
+  const barFirstTopRef = useRef(0)
+  const isPullingRef = useRef(true)
+  const touchLastClientYRef = useRef(0)
   const setPullTop = (number:number)=>{
     if(number>100)number = 100
     if(number<0)number = 0
@@ -44,15 +44,15 @@ const useScrollBarPos = (props:Props) => {
   const onMouseMoveBar = (e: MouseEvent) => {
     const {scrollHeight,viewHeight,current} = getContainerInfo()
     if (!isDraggingRef.current) return;
-    const diff = e.clientY - barFirstYRef.current
-    const newScrollBarTop = diff + barFirstTopRef.current
+    const delta = e.clientY - barFirstClientYRef.current
+    const newScrollBarTop = delta + barFirstTopRef.current
     setBarTop(newScrollBarTop)
     current!.scrollTop = scrollHeight * newScrollBarTop / viewHeight
   }
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     isDraggingRef.current = true
-    barFirstYRef.current = e.clientY
+    barFirstClientYRef.current = e.clientY
     barFirstTopRef.current = barTop
   }
   const onSelectState = (e: Event) => {
@@ -71,16 +71,14 @@ const useScrollBarPos = (props:Props) => {
   }
   const onTouchMove = (e:React.TouchEvent<HTMLDivElement>)=>{
     const {scrollTop} = getContainerInfo()
-    isPullRef.current = scrollTop===0
-    console.log("isPullRef,pullTop")
-    console.log(isPullRef,pullTop)
-    const delta = e.targetTouches[0].clientY - touchLastYRef.current
-    touchLastYRef.current = e.targetTouches[0].clientY
-    if(!isPullRef.current&&pullTop===0) return
+    isPullingRef.current = scrollTop===0
+    const delta = e.targetTouches[0].clientY - touchLastClientYRef.current
+    touchLastClientYRef.current = e.targetTouches[0].clientY
+    if(!isPullingRef.current&&pullTop===0) return
     setPullTop(delta+pullTop)
   };
   const onTouchEnd = ()=>{
-    if(isPullRef.current){
+    if(isPullingRef.current){
       if(pullTop===100) onPull?.()
       setPullTop(0)
     }
@@ -88,8 +86,8 @@ const useScrollBarPos = (props:Props) => {
   
   const onTouchStart = (e:React.TouchEvent<HTMLDivElement>)=>{
     const {scrollTop} = getContainerInfo()
-    isPullRef.current = scrollTop===0
-    touchLastYRef.current = e.targetTouches[0].clientY
+    isPullingRef.current = scrollTop===0
+    touchLastClientYRef.current = e.targetTouches[0].clientY
   }
   useEffect(() => {
     setBarPosState(getContainerInfo())
@@ -130,10 +128,10 @@ const useScrollBarPos = (props:Props) => {
     }
   }
   return {
-    getScrollProps: getScrollContainerProps,
+    getScrollContainerProps,
     getScrollBarProps,
-    scrollHeight: barHeight,
-    scrollTop: barTop,
+    barHeight,
+    barTop,
     pullTop,
   }
 }
