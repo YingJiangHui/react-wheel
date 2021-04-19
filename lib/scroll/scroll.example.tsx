@@ -8,7 +8,7 @@ interface scrollExampleProps {
 const scrollExample:FC<scrollExampleProps> = (props)=>{
     return (
     <div style={{width:200,height: "30vh"}}>
-        <Scroll>
+        <Scroll onReady={(status)=>{console.log(status)}}>
             {
                 new Array(40).fill(1).map((_,index)=>(<div key={index}>{index}</div>))
             }
