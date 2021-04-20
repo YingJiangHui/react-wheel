@@ -14,10 +14,12 @@ export interface dropDownUpdateEvent {
 
 interface Props extends dropDownUpdateEvent {
   onRefresh?: () => void
-  onReadyChange?: (status: Status) => React.ReactNode|void
+  onReadyChange?: (status: Status) => React.ReactNode
   waitingDistance?: number
   isWait?: boolean
 }
+
+
 
 const useScrollBarPos = (props: Props) => {
   const {onFinish,onPulling,onRefreshing,onRefreshable,onRefresh: _onRefresh,onReadyChange,waitingDistance = 60,isWait = false} = props;
@@ -25,6 +27,8 @@ const useScrollBarPos = (props: Props) => {
   const [barTop,_setBarTop] = useState(0);
   const [pullTop,_setPullTop] = useState(0);
   const [status,_setStatus] = useState<Status>('none');
+  const [whenPullingNode,_setWhenPullingNode] = useState<React.ReactNode>()
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef<boolean>(false);
   const barFirstClientYRef = useRef(0);
@@ -36,7 +40,9 @@ const useScrollBarPos = (props: Props) => {
     if (number < 0) number = 0;
     _setPullTop(number);
   };
-  
+  const setWhenPullingNode = (node?:React.ReactNode)=>{
+    if(node) _setWhenPullingNode(node)
+  }
   const getContainerInfo = () => {
     const {current} = containerRef;
     return {
@@ -84,16 +90,16 @@ const useScrollBarPos = (props: Props) => {
     _setStatus(status);
   };
   useEffect(() => {
-    onReadyChange?.(status);
+    setWhenPullingNode(onReadyChange?.(status));
     const onMap = {
       'refreshable': onRefreshable,'refreshing': onRefreshing,'pulling': onPulling,'none': onFinish
     };
-    onMap[status]?.();
+    onMap[status]?.()
   },[status]);
   useEffect(() => {
     if (pullTop >= 100) {
       setStatus('refreshable');
-    } else if (pullTop===waitingDistance&&touchTriggerRef.current){
+    } else if (pullTop===waitingDistance&&!touchTriggerRef.current){
       setStatus('refreshing');
     }else if (pullTop === 0) {
       setStatus('none');
@@ -113,23 +119,15 @@ const useScrollBarPos = (props: Props) => {
     setStatus('refreshing');
     _onRefresh?.();
   };
-  const closeAnimation = () => {
-    containerRef.current!.style.transition = `none 0s`;
-  };
-  const openAnimation = () => {
-    containerRef.current!.style.transition = `transform 0.25s`;
-  };
   
   const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     touchTriggerRef.current = true
     const {scrollTop} = getContainerInfo();
     isPullingRef.current = scrollTop === 0;
     touchLastClientYRef.current = e.targetTouches[0].clientY;
-    closeAnimation();
   };
   
   const onTouchEnd = () => {
-    openAnimation();
     touchTriggerRef.current = false
     if (isPullingRef.current) {
       if (pullTop >= 100) {
@@ -190,8 +188,7 @@ const useScrollBarPos = (props: Props) => {
     setPullTop(0);
   };
   return {
-    getScrollContainerProps,getScrollBarProps,barHeight,barTop,pullTop,status,completed
+    getScrollContainerProps,getScrollBarProps,barHeight,barTop,pullTop,status,completed,whenPullingNode,touchTrigger:touchTriggerRef.current
   };
 };
-
 export default useScrollBarPos;

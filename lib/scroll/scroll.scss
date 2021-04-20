@@ -4,6 +4,10 @@
     border: 1px solid red;
     overflow: hidden;
     height: 100%;
+    &-pull-animation-wrapper{
+      display: flex;
+      justify-content: center;
+    }
     &-inner {
       border: 1px solid blue;
       overflow: auto;
