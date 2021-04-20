@@ -1,13 +1,17 @@
 import {SyntheticEvent,useEffect,useRef,useState} from 'react';
 import React from 'react';
+import useCounter from "./useCounter";
 
 type ScrollContainer = {scrollTop?: number,viewHeight?: number,scrollHeight?: number}
 type divFunc = (props?: React.HTMLAttributes<HTMLDivElement>) => React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>,HTMLDivElement>
-export type Status = 'pulling'|'refreshable'|'refreshing'|'none'
+export type ableStatus = 'refreshable'|'refreshing'|'completed'|'none'
+export type disStatus =  'disRefresh'|'none'
+
+export type Status = ableStatus|disStatus
 
 export interface dropDownUpdateEvent {
-  onFinish?: () => void
-  onPulling?: () => void
+  onCompleted?: () => void
+  onDisRefresh?: () => void
   onRefreshing?: () => void
   onRefreshable?: () => void
 }
@@ -16,18 +20,23 @@ interface Props extends dropDownUpdateEvent {
   onRefresh?: () => void
   onReadyChange?: (status: Status) => React.ReactNode
   waitingDistance?: number
+  refreshableDistance?:number
   isWait?: boolean
 }
 
-
-
+const lifeCycleMap:{"disRefresh":disStatus[],"refreshable":ableStatus[]} = {
+  'refreshable':['refreshable','refreshing','completed','none'],
+  'disRefresh':['disRefresh','none']
+}
 const useScrollBarPos = (props: Props) => {
-  const {onFinish,onPulling,onRefreshing,onRefreshable,onRefresh: _onRefresh,onReadyChange,waitingDistance = 60,isWait = false} = props;
+  const {onCompleted:_onCompleted,onDisRefresh:_onDisRefresh,onRefreshing:_onRefreshing,onRefreshable:_onRefreshable,onRefresh: _onRefresh,onReadyChange,refreshableDistance=100,waitingDistance = 60,isWait = false} = props;
+  const {count,increment,reset} = useCounter()
   const [barHeight,setBarHeight] = useState(0);
   const [barTop,_setBarTop] = useState(0);
   const [pullTop,_setPullTop] = useState(0);
   const [status,_setStatus] = useState<Status>('none');
   const [whenPullingNode,_setWhenPullingNode] = useState<React.ReactNode>()
+  const [lifeLine,setLifeLine] = useState<(disStatus|ableStatus)[]>([])
   
   const containerRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef<boolean>(false);
@@ -89,31 +98,37 @@ const useScrollBarPos = (props: Props) => {
     // _setStatus(s=> s==='refreshing'&&status!=='none'?s:status)
     _setStatus(status);
   };
-  useEffect(() => {
-    setWhenPullingNode(onReadyChange?.(status));
-    const onMap = {
-      'refreshable': onRefreshable,'refreshing': onRefreshing,'pulling': onPulling,'none': onFinish
-    };
-    onMap[status]?.()
-  },[status]);
-  useEffect(() => {
-    if (pullTop >= 100) {
-      setStatus('refreshable');
-    } else if (pullTop===waitingDistance&&!touchTriggerRef.current){
-      setStatus('refreshing');
-    }else if (pullTop === 0) {
-      setStatus('none');
-    } else if (pullTop !== 0) {
-      setStatus('pulling');
-    }
-  },[pullTop]);
+  
+  const onRefreshable=()=> {
+    _onRefreshable?.()
+    if(!touchTriggerRef.current)
+    increment()
+  }
+  const onDisRefresh=()=> {
+    _onDisRefresh?.()
+    if(!touchTriggerRef.current)
+    setPullTop(0)
+  }
+  const onRefreshing=()=> {
+    setPullTop(waitingDistance)
+    _onRefreshing?.()
+  }
+  const onCompleted=()=> {
+    setPullTop(0)
+    _onCompleted?.()
+  }
+  const onNone = ()=>{
+  }
+
   const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     const {scrollTop} = getContainerInfo();
     isPullingRef.current = scrollTop === 0;
     const delta = e.targetTouches[0].clientY - touchLastClientYRef.current;
     touchLastClientYRef.current = e.targetTouches[0].clientY;
     if (!isPullingRef.current && pullTop === 0) return;
-    setPullTop(delta + pullTop);
+    const newPullTop = delta + pullTop
+    setPullTop(newPullTop);
+    setStatus(newPullTop>=refreshableDistance?'refreshable':'disRefresh')
   };
   const onRefresh = () => {
     setStatus('refreshing');
@@ -126,15 +141,31 @@ const useScrollBarPos = (props: Props) => {
     isPullingRef.current = scrollTop === 0;
     touchLastClientYRef.current = e.targetTouches[0].clientY;
   };
+  useEffect(() => {
+    setWhenPullingNode(onReadyChange?.(status));
+    const onMap = {
+      'refreshable': onRefreshable,'refreshing': onRefreshing,'disRefresh': onDisRefresh,'completed': onCompleted,'none':onNone
+    };
+    onMap[status]?.()
+  },[status,touchTriggerRef.current]);
+  
+  useEffect(()=>{
+    setStatus(lifeLine[count])
+  },[lifeLine,count])
   
   const onTouchEnd = () => {
     touchTriggerRef.current = false
     if (isPullingRef.current) {
-      if (pullTop >= 100) {
-        onRefresh?.();
-        if (isWait) return setPullTop(waitingDistance);
+      if(isWait){
+        reset()
+        if(pullTop>=refreshableDistance){
+          setLifeLine(lifeCycleMap['refreshable'])
+        }else{
+          setLifeLine(lifeCycleMap['disRefresh'])
+        }
+      }else{
+        onRefresh()
       }
-      setPullTop(0);
     }
   };
   useEffect(() => {
@@ -165,6 +196,12 @@ const useScrollBarPos = (props: Props) => {
     e.preventDefault();
     setBarPosState(getContainerInfo());
   };
+  const onTransitionEnd = ()=>{
+    if(status==='completed'||status==="disRefresh"){
+      increment()
+    }
+  }
+
   const onSelect = (e: SyntheticEvent<HTMLDivElement>) => e.preventDefault();
   const getScrollContainerProps: divFunc = (props) => {
     const ref = containerRef;
@@ -174,6 +211,7 @@ const useScrollBarPos = (props: Props) => {
       onTouchEnd: mixExec(props?.onTouchEnd)(onTouchEnd),
       onScroll: mixExec(props?.onScroll)(onScroll),
       onSelect: mixExec(props?.onSelect)(onSelect),
+      onTransitionEnd: mixExec(props?.onTransitionEnd)(onTransitionEnd),
       ref,
       ...props
     };
@@ -185,7 +223,8 @@ const useScrollBarPos = (props: Props) => {
     };
   };
   const completed = () => {
-    setPullTop(0);
+    if(status==='refreshing')
+      increment()
   };
   return {
     getScrollContainerProps,getScrollBarProps,barHeight,barTop,pullTop,status,completed,whenPullingNode,touchTrigger:touchTriggerRef.current

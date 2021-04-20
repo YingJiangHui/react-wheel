@@ -10,13 +10,14 @@ const scrollExample:FC<scrollExampleProps> = (props)=>{
     <div style={{width:200,height: "30vh"}}>
         <Scroll onReadyChange={(status)=>{
             const nodeMap = {
-                'refreshing':<>123</>,
-                'pulling':<>723423</>,
-                'refreshable':"sdfff",
-                'none':1
+                'refreshing':1,
+                'disRefresh':2,
+                'refreshable':3,
+                'completed':4,
+                'none':5
             }
             return nodeMap[status]
-        }} onFinish={()=>{console.log('onFinish')}} isWait={true} onRefresh={()=>{console.log(1);}}>
+        }} onCompleted={()=>{console.log('onFinish')}} isWait={true} onRefresh={()=>{console.log(1);}}>
             {
                 new Array(40).fill(1).map((_,index)=>(<div key={index}>{index}</div>))
             }
