@@ -7,24 +7,29 @@ export type Status = 'pulling'|'refreshable'|'refreshing'|'none'
 interface Props{
   onPull?:()=>void
   onReady?:(status:Status)=>void
+  distance: number
 }
 
 const useScrollBarPos = (props:Props) => {
-  const {onPull:_onPull,onReady} = props
+  const {onPull:_onPull,onReady,distance} = props
   const [barHeight, setBarHeight] = useState(0)
   const [barTop, _setBarTop] = useState(0)
   const [pullTop,_setPullTop] = useState(0)
-  const [status,setStatus] = useState<Status>('none')
+  const [status,_setStatus] = useState<Status>('none')
   const containerRef = useRef<HTMLDivElement>(null)
   const isDraggingRef = useRef<boolean>(false)
   const barFirstClientYRef = useRef(0)
   const barFirstTopRef = useRef(0)
   const isPullingRef = useRef(true)
   const touchLastClientYRef = useRef(0)
+ 
   const setPullTop = (number:number)=>{
     // if(number>100)number = 100
     if(number<0)number = 0
     _setPullTop(number)
+  }
+  const completed = ()=>{
+    setPullTop(0)
   }
   const getContainerInfo = () => {
     const {current} = containerRef
@@ -72,25 +77,21 @@ const useScrollBarPos = (props:Props) => {
     setBarHeight(calculateBarHeight({viewHeight, scrollHeight}))
     setBarTop(calculateBarTop({scrollTop, viewHeight, scrollHeight}))
   }
-  const ref = useRef<Status>('none')
-  const onTouchStart = (e:React.TouchEvent<HTMLDivElement>)=>{
-    const {scrollTop} = getContainerInfo()
-    isPullingRef.current = scrollTop===0
-    touchLastClientYRef.current = e.targetTouches[0].clientY
+  const setStatus = (status:Status)=>{
+    _setStatus(s=> s==='refreshing'&&status!=='none'?s:status)
   }
   useEffect(()=>{
     onReady?.(status)
   },[status])
   useEffect(()=>{
-    if(pullTop>=100){
+    if(pullTop>100){
       setStatus('refreshable')
-      ref.current = "refreshable"
+    }else if(pullTop===distance){
+      setStatus('refreshing')
     }else if(pullTop===0){
       setStatus('none')
-      ref.current = "none"
     }else if(pullTop!==0){
       setStatus('pulling')
-      ref.current = "pulling"
     }
   },[pullTop])
   const onTouchMove = (e:React.TouchEvent<HTMLDivElement>)=>{
@@ -100,17 +101,34 @@ const useScrollBarPos = (props:Props) => {
     touchLastClientYRef.current = e.targetTouches[0].clientY
     if(!isPullingRef.current&&pullTop===0) return
     setPullTop(delta+pullTop)
-    ref.current = "pulling"
   };
   const onPull = ()=>{
-    ref.current = "refreshing"
     setStatus('refreshing')
     _onPull?.()
   }
+  const closeAnimation = ()=>{
+    containerRef.current!.style.transition = `none 0s`
+  }
+  const openAnimation = ()=>{
+    containerRef.current!.style.transition = `transform 0.25s`
+  }
+  
+  const onTouchStart = (e:React.TouchEvent<HTMLDivElement>)=>{
+    const {scrollTop} = getContainerInfo()
+    isPullingRef.current = scrollTop===0
+    touchLastClientYRef.current = e.targetTouches[0].clientY
+    closeAnimation()
+  }
+
   const onTouchEnd = ()=>{
+    openAnimation()
     if(isPullingRef.current){
-      if(pullTop>=100) onPull?.()
-      setPullTop(0)
+      if(pullTop>=100) {
+        onPull?.();
+        setPullTop(60)
+      }else{
+        setPullTop(0)
+      }
     }
   };
   useEffect(() => {
@@ -157,7 +175,8 @@ const useScrollBarPos = (props:Props) => {
     barHeight,
     barTop,
     pullTop,
-    status
+    status,
+    completed
   }
 }
 
