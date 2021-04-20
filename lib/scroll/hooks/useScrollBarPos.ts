@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {HTMLAttributes,SyntheticEvent,useEffect,useRef,useState} from 'react';
 import React from 'react'
 
 type ScrollContainer = { scrollTop?: number, viewHeight?: number, scrollHeight?: number }
@@ -11,7 +11,7 @@ interface Props{
 }
 
 const useScrollBarPos = (props:Props) => {
-  const {onPull:_onPull,onReady,distance} = props
+  const {onPull:_onPull,onReady,distance=60} = props
   const [barHeight, setBarHeight] = useState(0)
   const [barTop, _setBarTop] = useState(0)
   const [pullTop,_setPullTop] = useState(0)
@@ -22,7 +22,7 @@ const useScrollBarPos = (props:Props) => {
   const barFirstTopRef = useRef(0)
   const isPullingRef = useRef(true)
   const touchLastClientYRef = useRef(0)
- 
+  
   const setPullTop = (number:number)=>{
     // if(number>100)number = 100
     if(number<0)number = 0
@@ -78,13 +78,14 @@ const useScrollBarPos = (props:Props) => {
     setBarTop(calculateBarTop({scrollTop, viewHeight, scrollHeight}))
   }
   const setStatus = (status:Status)=>{
-    _setStatus(s=> s==='refreshing'&&status!=='none'?s:status)
+    // _setStatus(s=> s==='refreshing'&&status!=='none'?s:status)
+    _setStatus(status)
   }
   useEffect(()=>{
     onReady?.(status)
   },[status])
   useEffect(()=>{
-    if(pullTop>100){
+    if(pullTop>=100){
       setStatus('refreshable')
     }else if(pullTop===distance){
       setStatus('refreshing')
@@ -142,30 +143,37 @@ const useScrollBarPos = (props:Props) => {
       document.removeEventListener('selectstart', onSelectState)
     }
   }, [])
-  
+  function mixExec<MF extends Function>(fn1?:MF){
+    return function<OF extends Function>(fn2:OF){
+      return function<E>(e:E){
+        fn2(e)
+        fn1?.(e)
+      }
+    }
+  }
+  const onScroll = (e:React.UIEvent<HTMLDivElement>)=>{
+    if(pullTop!==0){
+      e.currentTarget.scrollTop = 0
+    }
+    e.preventDefault()
+    setBarPosState(getContainerInfo())
+  }
+  const onSelect = (e:SyntheticEvent<HTMLDivElement>)=>e.preventDefault()
   const getScrollContainerProps: divFunc = (props) => {
+    const ref = containerRef
     return {
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      onScroll: (e) => {
-        if(pullTop!==0){
-          e.currentTarget.scrollTop = 0
-        }
-        e.preventDefault()
-        setBarPosState(getContainerInfo())
-        props?.onScroll?.(e)
-      },
-      onSelect: (e) => {
-        e.preventDefault()
-      },
-      ref: containerRef,
+      onTouchStart: mixExec(props?.onTouchStart)(onTouchStart),
+      onTouchMove: mixExec(props?.onTouchMove)(onTouchMove),
+      onTouchEnd: mixExec(props?.onTouchEnd)(onTouchEnd),
+      onScroll: mixExec(props?.onScroll)(onScroll),
+      onSelect: mixExec(props?.onSelect)(onSelect),
+      ref,
       ...props
     }
   }
   const getScrollBarProps: divFunc = (props) => {
     return {
-      onMouseDown,
+      onMouseDown:mixExec(props?.onMouseDown)(onMouseDown),
       ...props
     }
   }
