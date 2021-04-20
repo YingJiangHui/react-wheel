@@ -15,7 +15,7 @@ const sc = scopedClass('makabaka-scroll');
 const Scroll: FC<ScrollProps> = (props) => {
   const {children,onReady,onPull} = props;
   const {scrollBarWidth} = useCalculateScrollBarWidth();
-  const {getScrollContainerProps,barTop,barHeight,getScrollBarProps,pullTop,completed} = useScrollBarPos({onPull,onReady});
+  const {getScrollContainerProps,barTop,barHeight,getScrollBarProps,pullTop,completed} = useScrollBarPos({onRefresh: onPull,onReadyChange: onReady});
   return (<>
     <Button onClick={completed}>click</Button>
       <div className={sc()}>

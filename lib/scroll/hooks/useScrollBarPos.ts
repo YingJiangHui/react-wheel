@@ -1,17 +1,25 @@
-import {HTMLAttributes,SyntheticEvent,useEffect,useRef,useState} from 'react';
+import {SyntheticEvent,useEffect,useRef,useState} from 'react';
 import React from 'react'
 
 type ScrollContainer = { scrollTop?: number, viewHeight?: number, scrollHeight?: number }
 type divFunc = (props?: React.HTMLAttributes<HTMLDivElement>) => React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 export type Status = 'pulling'|'refreshable'|'refreshing'|'none'
-interface Props{
-  onPull?:()=>void
-  onReady?:(status:Status)=>void
-  distance: number
+
+interface dropDownUpdateEvent {
+  onFinish?:()=>void
+  onPulling?:()=>void
+  onRefreshing?:()=>void
+  onRefreshable?:()=>void
+}
+interface Props extends dropDownUpdateEvent{
+  onRefresh?:()=>void
+  onReadyChange?:(status:Status)=>React.ReactNode|void
+  waitingDistance?: number
+  isWait?: boolean
 }
 
 const useScrollBarPos = (props:Props) => {
-  const {onPull:_onPull,onReady,distance=60} = props
+  const {onFinish,onPulling,onRefreshing,onRefreshable,onRefresh:_onRefresh,onReadyChange,waitingDistance=60,isWait=false} = props
   const [barHeight, setBarHeight] = useState(0)
   const [barTop, _setBarTop] = useState(0)
   const [pullTop,_setPullTop] = useState(0)
@@ -82,13 +90,18 @@ const useScrollBarPos = (props:Props) => {
     _setStatus(status)
   }
   useEffect(()=>{
-    onReady?.(status)
+    onReadyChange?.(status)
+    const onMap={
+      "refreshable":onRefreshable,
+      "refreshing": onRefreshing,
+      "pulling":onPulling,
+      "none":onFinish
+    }
+    onMap[status]?.()
   },[status])
   useEffect(()=>{
     if(pullTop>=100){
       setStatus('refreshable')
-    }else if(pullTop===distance){
-      setStatus('refreshing')
     }else if(pullTop===0){
       setStatus('none')
     }else if(pullTop!==0){
@@ -105,7 +118,7 @@ const useScrollBarPos = (props:Props) => {
   };
   const onPull = ()=>{
     setStatus('refreshing')
-    _onPull?.()
+    _onRefresh?.()
   }
   const closeAnimation = ()=>{
     containerRef.current!.style.transition = `none 0s`
@@ -126,10 +139,10 @@ const useScrollBarPos = (props:Props) => {
     if(isPullingRef.current){
       if(pullTop>=100) {
         onPull?.();
-        setPullTop(60)
-      }else{
-        setPullTop(0)
+        if(isWait)
+          return setPullTop(waitingDistance)
       }
+        setPullTop(0)
     }
   };
   useEffect(() => {
@@ -144,9 +157,9 @@ const useScrollBarPos = (props:Props) => {
     }
   }, [])
   function mixExec<MF extends Function>(fn1?:MF){
-    return function<OF extends Function>(fn2:OF){
+    return function<OF extends Function>(fn2?:OF){
       return function<E>(e:E){
-        fn2(e)
+        fn2?.(e)
         fn1?.(e)
       }
     }
