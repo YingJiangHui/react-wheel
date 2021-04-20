@@ -2,20 +2,22 @@ import React,{FC} from 'react';
 import {scopedClass} from '../helper/scopedClass';
 import './scroll.scss';
 import useCalculateScrollBarWidth from './hooks/useCalculateScrollBarWidth';
-import useScrollBarPos,{Status} from './hooks/useScrollBarPos';
+import useScrollBarPos,{dropDownUpdateEvent,Status} from './hooks/useScrollBarPos';
 import Button from '../button/button';
 
-interface ScrollProps {
-  onPull?: () => void
-  onReady?: (status: Status) => void
+interface ScrollProps extends dropDownUpdateEvent{
+  onRefresh?:()=>void
+  onReadyChange?:(status:Status)=>React.ReactNode|void
+  waitingDistance?: number
+  isWait?: boolean
 }
 
 const sc = scopedClass('makabaka-scroll');
 
 const Scroll: FC<ScrollProps> = (props) => {
-  const {children,onReady,onPull} = props;
+  const {children,...rest} = props;
   const {scrollBarWidth} = useCalculateScrollBarWidth();
-  const {getScrollContainerProps,barTop,barHeight,getScrollBarProps,pullTop,completed} = useScrollBarPos({onRefresh: onPull,onReadyChange: onReady});
+  const {getScrollContainerProps,barTop,barHeight,getScrollBarProps,pullTop,completed} = useScrollBarPos({...rest});
   return (<>
     <Button onClick={completed}>click</Button>
       <div className={sc()}>
