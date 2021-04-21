@@ -9,7 +9,7 @@ export type ableStatus = 'refreshable'|'refreshing'|'completed'|'none'
 export type disStatus =  'disRefresh'|'none'
 
 export type Status = ableStatus|disStatus
-
+export type EventName = "onRefreshable" | "onRefreshing" | "onDisRefresh"| "onCompleted"|"onEnd"
 export interface GetScrollPropsMap {
   getScrollContainerProps:DivFunc,getScrollBarProps:DivFunc,getPullingAnimationProps:DivFunc,getTrackProps:DivFunc
 }
@@ -29,16 +29,13 @@ interface useScrollProps {
   maxDropDownDistance?:number
   completedWaitTime?:number
 }
-
-type StatusToEvent = {
-  'refreshable': 'onRefreshable','refreshing': 'onRefreshing','disRefresh': 'onDisRefresh','completed': 'onCompleted','none': 'onEnd'
-}
+type StatusToOtherMap<Type> = Type extends "Event" ? {[key in EventName]:()=>void}:{[key in Status]:EventName}
 
 const lifeCycleMap:{"disRefresh":disStatus[],"refreshable":ableStatus[]} = {
   'refreshable':['refreshable','refreshing','completed','none'],
   'disRefresh':['disRefresh','none']
 }
-const statusToEvent:StatusToEvent = {
+const statusToEvent:StatusToOtherMap<"EventName"> = {
   'refreshable': 'onRefreshable','refreshing': 'onRefreshing','disRefresh': 'onDisRefresh','completed': 'onCompleted','none': 'onEnd'
 };
 const useScrollBarPos = (props: useScrollProps) => {
@@ -150,11 +147,11 @@ const useScrollBarPos = (props: useScrollProps) => {
     touchLastClientYRef.current = e.targetTouches[0].clientY;
   };
   useEffect(() => {
-    const onEventMap = {
+    const onEventMap:StatusToOtherMap<"Event"> = {
        onRefreshable, onRefreshing,onDisRefresh, onCompleted,onEnd
     };
-    onEventMap[statusToEvent[status]]?.()
-    onEvent?.()[statusToEvent[status]]?.()
+    onEventMap[statusToEvent[status]]() // 内部事件
+    onEvent?.()[statusToEvent[status]]?.() // 用户事件
   },[status,touchTriggerRef.current]);
   
   useEffect(()=>{
