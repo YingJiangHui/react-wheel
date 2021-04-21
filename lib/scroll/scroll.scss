@@ -5,6 +5,8 @@
     overflow: hidden;
     height: 100%;
     &-pull-animation-wrapper{
+      width: 100%;
+      position: absolute;
       display: flex;
       justify-content: center;
     }

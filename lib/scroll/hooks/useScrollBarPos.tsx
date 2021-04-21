@@ -1,4 +1,4 @@
-import {SyntheticEvent,useEffect,useRef,useState} from 'react';
+import {SyntheticEvent,useEffect,useMemo,useRef,useState} from 'react';
 import React from 'react';
 import useCounter from "./useCounter";
 
@@ -18,7 +18,7 @@ export interface dropDownUpdateEvent {
 
 interface Props extends dropDownUpdateEvent {
   onRefresh?: () => void
-  onReadyChange?: (status: Status) => React.ReactNode
+  onReadyChange?: ({status: Status}:{status: Status}) => React.ReactNode
   waitingDistance?: number
   refreshableDistance?:number
   isWait?: boolean
@@ -95,7 +95,6 @@ const useScrollBarPos = (props: Props) => {
     setBarTop(calculateBarTop({scrollTop,viewHeight,scrollHeight}));
   };
   const setStatus = (status: Status) => {
-    // _setStatus(s=> s==='refreshing'&&status!=='none'?s:status)
     _setStatus(status);
   };
   
@@ -142,7 +141,7 @@ const useScrollBarPos = (props: Props) => {
     touchLastClientYRef.current = e.targetTouches[0].clientY;
   };
   useEffect(() => {
-    setWhenPullingNode(onReadyChange?.(status));
+    setWhenPullingNode(onReadyChange?.({status}));
     const onMap = {
       'refreshable': onRefreshable,'refreshing': onRefreshing,'disRefresh': onDisRefresh,'completed': onCompleted,'none':onNone
     };
@@ -152,7 +151,7 @@ const useScrollBarPos = (props: Props) => {
   useEffect(()=>{
     setStatus(lifeLine[count])
   },[lifeLine,count])
-  
+  const refreshableRate = useMemo(()=>pullTop>=refreshableDistance?100:pullTop/refreshableDistance*100,[pullTop,refreshableDistance])
   const onTouchEnd = () => {
     touchTriggerRef.current = false
     if (isPullingRef.current) {
@@ -227,7 +226,7 @@ const useScrollBarPos = (props: Props) => {
       increment()
   };
   return {
-    getScrollContainerProps,getScrollBarProps,barHeight,barTop,pullTop,status,completed,whenPullingNode,touchTrigger:touchTriggerRef.current
+    getScrollContainerProps,getScrollBarProps,barHeight,barTop,pullTop,status,completed,whenPullingNode,touchTrigger:touchTriggerRef.current,refreshableRate
   };
 };
 export default useScrollBarPos;
