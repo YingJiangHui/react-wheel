@@ -1,27 +1,33 @@
-import React,{FC} from 'react'
+import React,{FC,useEffect} from 'react';
 import Scroll from './scroll';
+import useScrollBarPos from './hooks/useScrollBarPos';
 
 interface scrollExampleProps{
 
 }
 
 const scrollExample:FC<scrollExampleProps> = (props)=>{
-    return (
+  const {getScrollPropsMap,status,completed} = useScrollBarPos({
+    onEvent:()=>{
+      return {
+        onRefreshing:()=>{
+          setTimeout(()=>{
+            completed()
+          },1000)
+        }
+      }
+    }
+  });
+  const map = {
+    'refreshing':'refreshing',
+    'refreshable':'refreshable',
+    'disRefresh':'disRefresh',
+    'completed':'completed',
+  }
+  const node = <div>{map[status]}</div>
+  return (
     <div style={{width:200,height: "30vh"}}>
-        <Scroll
-          onPulling={({refreshableRate})=>{
-              console.log(refreshableRate)
-          }}
-          onReadyChange={({status})=>{
-            const nodeMap = {
-                'refreshing':1,
-                'disRefresh':2,
-                'refreshable':3,
-                'completed':999999,
-                'none':10000
-            }
-            return nodeMap[status]
-        }} onCompleted={()=>{console.log('onFinish')}} isWait={true} onRefresh={()=>{console.log(1);}}>
+        <Scroll getScrollPropsMap={getScrollPropsMap} whenPullingNode={node}>
             {
                 new Array(40).fill(1).map((_,index)=>(<div key={index}>{index}</div>))
             }
