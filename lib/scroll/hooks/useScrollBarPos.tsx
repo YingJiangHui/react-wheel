@@ -5,36 +5,30 @@ import useCalculateScrollBarWidth from './useCalculateScrollBarWidth';
 
 type ScrollContainer = {scrollTop?: number,viewHeight?: number,scrollHeight?: number}
 type DivFunc = (props?: React.HTMLAttributes<HTMLDivElement>) => React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>,HTMLDivElement>
-export type ableStatus = 'refreshable'|'refreshing'|'completed'|'none'
-export type disStatus =  'disRefresh'|'none'
 
-export type Status = ableStatus|disStatus
 export type EventName = "onRefreshable" | "onRefreshing" | "onDisRefresh"| "onCompleted"|"onEnd"
 export interface GetScrollPropsMap {
   getScrollContainerProps:DivFunc,getScrollBarProps:DivFunc,getPullingAnimationProps:DivFunc,getTrackProps:DivFunc
 }
-
-export type OnEvent = ()=>{
-  onRefreshable?:()=>void
-  onRefreshing?:()=>void
-  onDisRefresh?:()=>void
-  onCompleted?:()=>void
-  onEnd?:()=>void
-}
-
+type StatusToOtherMap<Type> = Type extends "Event" ? {[key in EventName]:()=>void}:{[key in Status]:EventName}
+type EventMap = Partial<StatusToOtherMap<"Event">>
 interface useScrollProps {
-  onEvent?:OnEvent
+  onEvent?:()=>EventMap
   waitingDistance?:number
   refreshableDistance?:number
   maxDropDownDistance?:number
   completedWaitTime?:number
 }
-type StatusToOtherMap<Type> = Type extends "Event" ? {[key in EventName]:()=>void}:{[key in Status]:EventName}
+
+export type ableStatus = 'refreshable'|'refreshing'|'completed'|'none'
+export type disStatus =  'disRefresh'|'none'
+export type Status = ableStatus|disStatus
 
 const lifeCycleMap:{"disRefresh":disStatus[],"refreshable":ableStatus[]} = {
   'refreshable':['refreshable','refreshing','completed','none'],
   'disRefresh':['disRefresh','none']
 }
+
 const statusToEvent:StatusToOtherMap<"EventName"> = {
   'refreshable': 'onRefreshable','refreshing': 'onRefreshing','disRefresh': 'onDisRefresh','completed': 'onCompleted','none': 'onEnd'
 };
