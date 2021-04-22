@@ -140,7 +140,7 @@ const useScrollBarPos = (props: useScrollProps) => {
     setBarTop(newScrollBarTop);
     current!.scrollTop = scrollHeight * newScrollBarTop / viewHeight;
   };
-  const onMouseDown = (e: React.MouseEvent<HTMLDivElement,MouseEvent>) => {
+  const onMouseDownBar = (e: React.MouseEvent<HTMLDivElement,MouseEvent>) => {
     isDraggingRef.current = true;
     barFirstClientYRef.current = e.clientY;
     barFirstTopRef.current = barTop;
@@ -240,7 +240,7 @@ const useScrollBarPos = (props: useScrollProps) => {
   const getScrollBarProps: DivFunc = (props) => {
     return {
       style:{transform: `translateY(${barTop}px)`,height: barHeight,...props?.style},
-      onMouseDown: mixExec(props?.onMouseDown)(onMouseDown),
+      onMouseDown: mixExec(props?.onMouseDown)(onMouseDownBar),
       ...props
     };
   };

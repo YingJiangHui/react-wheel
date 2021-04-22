@@ -7,4 +7,4 @@ function mixExec<MF extends Function>(fn1?: MF) {
   };
 }
 
-export default mixExec()
+export default mixExec
