@@ -15,9 +15,11 @@ const App: React.FC = () => {
       <div className="docPage">
         <Layout>
           <Header className="docHeader">
-            logo
+            
+            <div className="docSideBar">side bar</div>
+            <div className="docLogo">logo</div>
           </Header>
-          <Layout>
+          <Layout className='docMain'>
             <Aside className="docAside">
               <div className="docNavLinks">
                 <NavLink to='/icon'>icon</NavLink>
