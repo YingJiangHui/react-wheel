@@ -6,8 +6,8 @@ interface Options{
   extra?:string[]
 }
 const scopedClass = (prefix: string) =>
-  (cn?: string | ClassToggles,options?:Options) =>
-     Object.entries(cn instanceof Object ? cn : {[cn||'']: true})
+  (cn?: number|string | ClassToggles,options?:Options) =>
+     Object.entries(cn instanceof Object ? cn : {[cn?.toString()||'']: true})
       .filter(kv => kv[1] !== false)
       .map(kv=>kv[0])
       .map(cn => [prefix, cn]
