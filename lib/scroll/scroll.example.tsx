@@ -27,6 +27,7 @@ const scrollExample:FC<scrollExampleProps> = (props)=>{
     'refreshable':'refreshable',
     'disRefresh':'disRefresh',
     'completed':'completed',
+    'none':'none'
   }
   const node = <div>{map[status]}</div>
   return (
