@@ -8,9 +8,9 @@ type DivFunc = (props?: React.HTMLAttributes<HTMLDivElement>) => React.DetailedH
 
 export type ScrollContainer = {scrollTop?: number,viewHeight?: number,scrollHeight?: number}
 
-export type EventName = "onRefreshable" | "onRefreshing" | "onDisRefresh"| "onCompleted"|"onEnd"|"onCancelRefresh"
+export type EventName = "onRefreshable" | "onRefreshing" | "onDisRefresh"| "onCompleted"|"onEnd"|"onCancelRefresh" | "onSlideDownRefresh"
 
-export type StatusToOtherMap<Type> = Type extends "Event" ? {[key in EventName]:()=>void}:{[key in Status]:Exclude<EventName,"onCancelRefresh">}
+export type StatusToOtherMap<Type> = Type extends "Event" ? {[key in EventName]:()=>void}:{[key in Status]:Exclude<EventName,"onCancelRefresh"|"onSlideDownRefresh">}
 
 export type EventMap = Partial<StatusToOtherMap<"Event">>
 
@@ -63,7 +63,7 @@ const useScrollBarPos = (props: useScrollProps) => {
   const timerRef = useRef<number>()
   
   useEffect(() => {
-    const onStatusEventMap:Omit<StatusToOtherMap<"Event">,'onCancelRefresh'> = {
+    const onStatusEventMap:Omit<StatusToOtherMap<"Event">,'onCancelRefresh'|'onSlideDownRefresh'> = {
       onRefreshable, onRefreshing,onDisRefresh, onCompleted,onEnd
     };
     onStatusEventMap[statusToEvent[status]]() // 内部事件
@@ -84,7 +84,7 @@ const useScrollBarPos = (props: useScrollProps) => {
       window.clearTimeout(timerRef.current)
     };
   },[]);
-  
+
   const {scrollBarWidth} = useCalculateScrollBarWidth();
   const animationStyle = useMemo(()=>({transition:touchTriggerRef.current?`none 0s`:`transform 0.25s`}),[touchTriggerRef.current])
   const refreshableRate = useMemo(()=>pullTop>=refreshableDistance?100:pullTop/refreshableDistance*100,[pullTop,refreshableDistance])
@@ -178,11 +178,15 @@ const useScrollBarPos = (props: useScrollProps) => {
   };
   
   const onScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const containerInfo = getContainerInfo()
+    const {scrollTop,scrollHeight,viewHeight} = containerInfo
     if (pullTop !== 0) {
       e.currentTarget.scrollTop = 0;
     }
     e.preventDefault();
-    setBarPosState(getContainerInfo());
+    setBarPosState(containerInfo);
+    if(scrollTop+viewHeight+100>=scrollHeight)
+      onSlideDownRefresh()
   };
   const onTransitionEnd = ()=>{
     if(status==='completed'||status==="disRefresh"){
@@ -217,7 +221,10 @@ const useScrollBarPos = (props: useScrollProps) => {
   }
   const onEnd = ()=>{
   }
- 
+  const onSlideDownRefresh = ()=>{
+    onEvent?.()['onSlideDownRefresh']?.()
+  }
+  
   const completed = () => {
     if(status==='refreshing')
       increment()

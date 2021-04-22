@@ -11,6 +11,9 @@ const scrollExample:FC<scrollExampleProps> = (props)=>{
   const {getScrollPropsMap,status,completed} = useScrollBarPos({
     onEvent:()=>{
       return {
+        onSlideDownRefresh:()=>{
+          console.log('refresh')
+        },
         onCancelRefresh:()=>{
           clearTimeout(timerRef.current)
         },
