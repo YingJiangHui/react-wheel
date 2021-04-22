@@ -6,11 +6,11 @@ import useCalculateScrollBarWidth from './useCalculateScrollBarWidth';
 type ScrollContainer = {scrollTop?: number,viewHeight?: number,scrollHeight?: number}
 type DivFunc = (props?: React.HTMLAttributes<HTMLDivElement>) => React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>,HTMLDivElement>
 
-export type EventName = "onRefreshable" | "onRefreshing" | "onDisRefresh"| "onCompleted"|"onEnd"
+export type EventName = "onRefreshable" | "onRefreshing" | "onDisRefresh"| "onCompleted"|"onEnd"|"onCancelRefresh"
 export interface GetScrollPropsMap {
   getScrollContainerProps:DivFunc,getScrollBarProps:DivFunc,getPullingAnimationProps:DivFunc,getTrackProps:DivFunc
 }
-type StatusToOtherMap<Type> = Type extends "Event" ? {[key in EventName]:()=>void}:{[key in Status]:EventName}
+type StatusToOtherMap<Type> = Type extends "Event" ? {[key in EventName]:()=>void}:{[key in Status]:Exclude<EventName,"onCancelRefresh">}
 type EventMap = Partial<StatusToOtherMap<"Event">>
 interface useScrollProps {
   onEvent?:()=>EventMap
@@ -32,6 +32,8 @@ const lifeCycleMap:{"disRefresh":disStatus[],"refreshable":ableStatus[]} = {
 const statusToEvent:StatusToOtherMap<"EventName"> = {
   'refreshable': 'onRefreshable','refreshing': 'onRefreshing','disRefresh': 'onDisRefresh','completed': 'onCompleted','none': 'onEnd'
 };
+
+const statusList:Status[] = Array.from(new Set(lifeCycleMap['refreshable'].concat(lifeCycleMap['disRefresh'] as ableStatus[])))
 const useScrollBarPos = (props: useScrollProps) => {
   const {refreshableDistance=100,waitingDistance = 60,onEvent,maxDropDownDistance=9999,completedWaitTime=0} = props;
   const {count,increment,reset} = useCounter()
@@ -96,10 +98,19 @@ const useScrollBarPos = (props: useScrollProps) => {
     setBarHeight(calculateBarHeight({viewHeight,scrollHeight}));
     setBarTop(calculateBarTop({scrollTop,viewHeight,scrollHeight}));
   };
-  const setStatus = (status: Status) => {
-    _setStatus(status);
-  };
   
+  const setStatus = (status: Status) => {
+    status&&_setStatus((s)=>{
+      if(s==='refreshing'&&(status==='refreshable'||status==='disRefresh'))
+        onCancelRequest?.()
+      if(statusList.indexOf(status)===-1)
+        return s
+      return status
+    });
+  };
+  const onCancelRequest = ()=>{
+    onEvent?.()['onCancelRefresh']?.()
+  }
   const onRefreshable=()=> {
     if(!touchTriggerRef.current)
     increment()
@@ -141,10 +152,10 @@ const useScrollBarPos = (props: useScrollProps) => {
     touchLastClientYRef.current = e.targetTouches[0].clientY;
   };
   useEffect(() => {
-    const onEventMap:StatusToOtherMap<"Event"> = {
+    const onStatusEventMap:Omit<StatusToOtherMap<"Event">,'onCancelRefresh'> = {
        onRefreshable, onRefreshing,onDisRefresh, onCompleted,onEnd
     };
-    onEventMap[statusToEvent[status]]() // 内部事件
+    onStatusEventMap[statusToEvent[status]]() // 内部事件
     onEvent?.()[statusToEvent[status]]?.() // 用户事件
   },[status,touchTriggerRef.current]);
   

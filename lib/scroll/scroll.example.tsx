@@ -1,4 +1,4 @@
-import React,{FC,useEffect} from 'react';
+import React,{FC,useRef} from 'react';
 import Scroll from './scroll';
 import useScrollBarPos from './hooks/useScrollBarPos';
 
@@ -7,11 +7,15 @@ interface scrollExampleProps{
 }
 
 const scrollExample:FC<scrollExampleProps> = (props)=>{
+  const timerRef = useRef(0)
   const {getScrollPropsMap,status,completed} = useScrollBarPos({
     onEvent:()=>{
       return {
+        onCancelRefresh:()=>{
+          clearTimeout(timerRef.current)
+        },
         onRefreshing:()=>{
-          setTimeout(()=>{
+          timerRef.current = window.setTimeout(()=>{
             completed()
           },1000)
         }
@@ -27,7 +31,7 @@ const scrollExample:FC<scrollExampleProps> = (props)=>{
   const node = <div>{map[status]}</div>
   return (
     <div style={{width:200,height: "30vh"}}>
-        <Scroll getScrollPropsMap={getScrollPropsMap} whenPullingNode={node}>
+        <Scroll getScrollPropsMap={getScrollPropsMap} whenPullingReactNode={node}>
             {
                 new Array(40).fill(1).map((_,index)=>(<div key={index}>{index}</div>))
             }
