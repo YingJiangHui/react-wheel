@@ -1,0 +1,11 @@
+.makabaka-row{
+
+}
+
+@for $i from 1 through 24 {
+  .makabaka-row-span-#{$i} { width: "#{100/$i}%"; }
+}
+
+@for $i from 1 through 24 {
+  .makabaka-row-offset-#{$i} { margin-right: "#{100/$i}%"; }
+}
