@@ -27,5 +27,9 @@ describe('useClassName 测试用例',() => {
     });
     expect(result.current.classNames).toBe('a b c lll-1 lll-2 lll-3 lll-4');
   });
+  it('可以传入多个参数转换为class名称',() => {
+    const {result} = renderHook(() => useClassName({extraClassName:['a' ,'b','c']}));
+    expect(result.current.classNames).toBe('a b c');
   
+  });
 });

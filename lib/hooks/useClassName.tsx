@@ -8,7 +8,8 @@ interface UseClassesProps{
 
 const useClassName = (props:UseClassesProps={})=>{
   const {prefix,extraClassName=[]} = props
-  const [classNames,_setClassNames] = useState<string>('')
+  const [classNames,_setClassNames] = useState<string>(extraClassName.join(' '))
+  
   function setClassNames(arg1:{[key in number|string]:boolean}):void
   function setClassNames(arg1:string,...args:string[]):void
   function setClassNames (arg1:{[key in number|string]:boolean}|string,...args:string[]){
