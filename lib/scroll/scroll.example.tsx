@@ -1,4 +1,4 @@
-import React,{FC,useRef} from 'react';
+import React,{FC,useRef,useState} from 'react';
 import Scroll from './scroll';
 import useScrollBarPos from './hooks/useScrollBarPos';
 
@@ -8,13 +8,24 @@ interface scrollExampleProps{
 
 const scrollExample:FC<scrollExampleProps> = (props)=>{
   const timerRef = useRef(0)
-  const {getScrollPropsMap,status,upGlideLoaded} = useScrollBarPos({
+  const [loading,setLoading] = useState(false)
+  const {getScrollPropsMap,status} = useScrollBarPos({
+    upGlideLoading:loading,
+    updating:loading,
     onEvent:()=>{
       return {
-        onUpGlideLoad:()=>{
+        onUpdating:()=>{
+          setLoading(true)
           clearTimeout(timerRef.current)
           setTimeout(()=>{
-            upGlideLoaded()
+            setLoading(false)
+          },1000)
+        },
+        onUpGlideLoad:()=>{
+          setLoading(true)
+          clearTimeout(timerRef.current)
+          setTimeout(()=>{
+            setLoading(false)
           },1000)
           console.log("load")
         }
@@ -30,6 +41,10 @@ const scrollExample:FC<scrollExampleProps> = (props)=>{
   }
   const node = <div>{map[status]}</div>
   return (
+    <>
+      <button onClick={()=>{
+        setLoading(loading=>!loading)
+      }}>trigger</button>
     <div style={{width:200,height: "30vh"}}>
         <Scroll getScrollPropsMap={getScrollPropsMap} whenPullingReactNode={node}>
             {
@@ -37,6 +52,7 @@ const scrollExample:FC<scrollExampleProps> = (props)=>{
             }
         </Scroll>
     </div>
+    </>
     )
 }
 

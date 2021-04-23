@@ -28,7 +28,8 @@ export interface useScrollProps {
   updatableDistance?:number
   maxDropDownDistance?:number
   completedWaitTime?:number
-  
+  upGlideLoading?:boolean
+  updating?:boolean
 }
 
 const lifeCycleMap:{"disUpdate":disStatus[],"updatable":ableStatus[]} = {
@@ -44,8 +45,7 @@ const statusList:Status[] = Array.from(new Set(lifeCycleMap['updatable'].concat(
 
 
 const useScrollBarPos = (props: useScrollProps) => {
-  const {updatableDistance=100,waitingDistance = 60,onEvent,maxDropDownDistance=9999,completedWaitTime=0} = props;
-  
+  const {updatableDistance=100,waitingDistance = 60,onEvent,maxDropDownDistance=9999,completedWaitTime=0,upGlideLoading=false,updating=false} = props;
   const {count,increment,reset} = useCounter()
   const [barHeight,setBarHeight] = useState(0);
   const [barTop,_setBarTop] = useState(0);
@@ -61,7 +61,6 @@ const useScrollBarPos = (props: useScrollProps) => {
   const touchLastClientYRef = useRef(0);
   const touchTriggerRef = useRef(false)
   const timerRef = useRef<number>()
-  const isUpGlideLoad = useRef<boolean>(true)
   const lastScrollTop = useRef<number>(0)
   
   useEffect(() => {
@@ -227,20 +226,20 @@ const useScrollBarPos = (props: useScrollProps) => {
   }
   
   const onUpGlideLoad = ()=>{
-    if(isUpGlideLoad.current){
-      isUpGlideLoad.current = false
+    if(!upGlideLoading){
       onEvent?.()['onUpGlideLoad']?.()
     }
-  }
-  
-  const upGlideLoaded = ()=>{
-    isUpGlideLoad.current = true
   }
   
   const downGlideUpdated = () => {
     if(status==='updating')
       increment()
   };
+  
+  useEffect(()=>{
+    if(status==='updating'&&!updating)
+      increment()
+  },[updating])
   
   const getScrollContainerProps: DivFunc = (props) => {
     const ref = containerRef;
@@ -280,7 +279,7 @@ const useScrollBarPos = (props: useScrollProps) => {
     getScrollPropsMap:{
       getScrollContainerProps,getScrollBarProps,getPullingAnimationProps,getTrackProps
     },
-    status,touchTrigger:touchTriggerRef.current,updatableRate,upGlideLoaded,downGlideUpdated
+    status,touchTrigger:touchTriggerRef.current,updatableRate,downGlideUpdated
   };
 };
 
