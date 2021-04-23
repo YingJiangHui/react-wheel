@@ -21,15 +21,17 @@
     &-track{
       position: absolute;
       right: 0;
-      height: 100%;
+      top: 3px;
+      bottom: 3px;
     }
     &-bar{
+      transition: 0.3s opacity;
       border-radius: 10px;
       height: 50px;
       width: 80%;
       position: absolute;
       left: 10%;
-      background: rgba(186, 186, 186,0.66);
+      background: rgba(198, 198, 198,0.66);
     }
   }
 }

@@ -3,10 +3,11 @@ import React from 'react';
 import useCounter from "./useCounter";
 import useCalculateScrollBarWidth from './useCalculateScrollBarWidth';
 import mixExec from '../../function/mixExec';
+import useTimeout from '../../hooks/useTimeout';
 
 type DivFunc = (props?: React.HTMLAttributes<HTMLDivElement>) => React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>,HTMLDivElement>
 
-export type ScrollContainer = {scrollTop?: number,viewHeight?: number,scrollHeight?: number}
+export type ScrollContainer = {trackHeight?:number,scrollTop?: number,viewHeight?: number,scrollHeight?: number}
 
 export type EventName = "onUpdatable" | "onUpdating" | "onDisUpdate"| "onCompleted"|"onEnd"|"onCancelUpdate" | "onUpGlideLoad"
 
@@ -47,20 +48,23 @@ const statusList:Status[] = Array.from(new Set(lifeCycleMap['updatable'].concat(
 const useScrollBarPos = (props: useScrollProps) => {
   const {updatableDistance=100,waitingDistance = 60,onEvent,maxDropDownDistance=9999,completedWaitTime=0,upGlideLoading=false,updating=false} = props;
   const {count,increment,reset} = useCounter()
+  const {setTimeout} = useTimeout()
+  
   const [barHeight,setBarHeight] = useState(0);
   const [barTop,_setBarTop] = useState(0);
   const [pullTop,_setPullTop] = useState(0);
   const [status,_setStatus] = useState<Status>('none');
   const [lifeLine,setLifeLine] = useState<(disStatus|ableStatus)[]>([])
+  const [barVisible,setBarVisible] = useState(false)
   
   const containerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef<boolean>(false);
   const barFirstClientYRef = useRef(0);
   const barFirstTopRef = useRef(0);
   const isPullingRef = useRef(true);
   const touchLastClientYRef = useRef(0);
   const touchTriggerRef = useRef(false)
-  const timerRef = useRef<number>()
   const lastScrollTop = useRef<number>(0)
   
   useEffect(() => {
@@ -81,7 +85,6 @@ const useScrollBarPos = (props: useScrollProps) => {
       document.removeEventListener('mouseup',onMouseUpBar);
       document.removeEventListener('mousemove',onMouseMoveBar);
       document.removeEventListener('selectstart',onSelectStart);
-      window.clearTimeout(timerRef.current)
     };
   },[]);
   
@@ -92,22 +95,26 @@ const useScrollBarPos = (props: useScrollProps) => {
   
   useEffect(()=>{
     if(!upGlideLoading)
-    setBarPosState(getContainerInfo());
+    setBarPosState(getSizes());
   },[upGlideLoading])
   
   const {scrollBarWidth} = useCalculateScrollBarWidth();
   const animationStyle = useMemo(()=>({transition:touchTriggerRef.current?`none 0s`:`transform 0.25s`}),[touchTriggerRef.current])
   const updatableRate = useMemo(()=>pullTop>=updatableDistance?100:pullTop/updatableDistance*100,[pullTop,updatableDistance])
   
-  const getContainerInfo = () => {
+  const getSizes = () => {
     const {current} = containerRef;
     return {
-      current,viewHeight: current!.clientHeight,scrollHeight: current!.scrollHeight,scrollTop: current!.scrollTop
+      current,viewHeight: current!.clientHeight,scrollHeight: current!.scrollHeight,scrollTop: current!.scrollTop,trackHeight:trackRef.current?.clientHeight
     };
   };
-  const setBarPosState = ({scrollTop,viewHeight,scrollHeight}: ScrollContainer) => {
-    setBarHeight(viewHeight===scrollHeight?0:calculateBarHeight({viewHeight,scrollHeight}));
-    setBarTop(calculateBarTop({scrollTop,viewHeight,scrollHeight}));
+  const setBarPosState = ({scrollTop,viewHeight,scrollHeight,trackHeight}: ScrollContainer) => {
+    setBarVisible(true)
+    setTimeout(1,()=>{
+      setBarVisible(false)
+    },5000)
+    setBarHeight(viewHeight===scrollHeight?0:calculateBarHeight({trackHeight,viewHeight,scrollHeight}));
+    setBarTop(calculateBarTop({scrollTop,trackHeight,scrollHeight}));
   };
   
   const setStatus = (status: Status) => {
@@ -126,24 +133,24 @@ const useScrollBarPos = (props: useScrollProps) => {
   };
   const setBarTop = (number: number) => {
     if (number <= 0) return;
-    const {scrollHeight,viewHeight} = getContainerInfo();
+    const {scrollHeight,viewHeight} = getSizes();
     const scrollBarMaxTop = (scrollHeight - viewHeight) / scrollHeight * viewHeight;
     if (number >= scrollBarMaxTop) return;
     _setBarTop(number);
   };
   
-  const calculateBarHeight = ({viewHeight = 0,scrollHeight = 0}: ScrollContainer) => {
-    return Math.pow(viewHeight,2) / scrollHeight;
+  const calculateBarHeight = ({trackHeight=0,viewHeight = 0,scrollHeight = 0}: ScrollContainer) => {
+    return trackHeight*viewHeight / scrollHeight;
   };
-  const calculateBarTop = ({scrollTop = 0,viewHeight = 0,scrollHeight = 0}: ScrollContainer) => {
-    return scrollTop * viewHeight / scrollHeight;
+  const calculateBarTop = ({scrollTop = 0,trackHeight = 0,scrollHeight = 0}: ScrollContainer) => {
+    return scrollTop * trackHeight / scrollHeight;
   };
 
   const onMouseUpBar = () => {
     isDraggingRef.current = false;
   };
   const onMouseMoveBar = (e: MouseEvent) => {
-    const {scrollHeight,viewHeight,current} = getContainerInfo();
+    const {scrollHeight,viewHeight,current} = getSizes();
     if (!isDraggingRef.current) return;
     const delta = e.clientY - barFirstClientYRef.current;
     const newScrollBarTop = delta + barFirstTopRef.current;
@@ -161,12 +168,12 @@ const useScrollBarPos = (props: useScrollProps) => {
   
   const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     touchTriggerRef.current = true
-    const {scrollTop} = getContainerInfo();
+    const {scrollTop} = getSizes();
     isPullingRef.current = scrollTop === 0;
     touchLastClientYRef.current = e.targetTouches[0].clientY;
   };
   const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    const {scrollTop} = getContainerInfo();
+    const {scrollTop} = getSizes();
     isPullingRef.current = scrollTop === 0;
     const delta = e.targetTouches[0].clientY - touchLastClientYRef.current;
     touchLastClientYRef.current = e.targetTouches[0].clientY;
@@ -188,7 +195,7 @@ const useScrollBarPos = (props: useScrollProps) => {
   };
   
   const onScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const containerInfo = getContainerInfo()
+    const containerInfo = getSizes()
     const {scrollTop,scrollHeight,viewHeight} = containerInfo
     if (pullTop !== 0) {
       e.currentTarget.scrollTop = 0;
@@ -219,8 +226,7 @@ const useScrollBarPos = (props: useScrollProps) => {
   }
   const onCompleted=()=> {
     if(completedWaitTime!==0){
-      window.clearTimeout(timerRef.current)
-      timerRef.current = window.setTimeout(()=>{
+       setTimeout(2,()=>{
         setPullTop(0)
       },completedWaitTime)
     }else{
@@ -261,7 +267,7 @@ const useScrollBarPos = (props: useScrollProps) => {
   };
   const getScrollBarProps: DivFunc = (props) => {
     return {
-      style:{transform: `translateY(${barTop}px)`,height: barHeight,...props?.style},
+      style:{transform: `translateY(${barTop}px)`,height: barHeight,opacity:barVisible?1:0,...props?.style,...props?.style},
       onMouseDown: mixExec(props?.onMouseDown)(onMouseDownBar),
       ...props
     };
@@ -274,7 +280,8 @@ const useScrollBarPos = (props: useScrollProps) => {
   }
   const getTrackProps:DivFunc=(props)=>{
     return {
-      style:{width: scrollBarWidth,...props?.style},
+      style:{width: scrollBarWidth},
+      ref:trackRef,
       ...props
     }
   };
