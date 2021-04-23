@@ -26,6 +26,15 @@ $border-color:#eee;
   border-bottom: 1px solid $border-color;
   box-shadow: 0 0 4px rgb(0,0,0,0.2);
   padding: 1em;
+  .docLogo{
+
+  }
+  .docSideBar{
+    display: none;
+  }
+}
+.docMain{
+  position: relative;
 }
 .docAside{
   border-right: 1px solid $border-color;
@@ -52,4 +61,20 @@ $border-color:#eee;
 .docFooter{
   border-top: 1px solid $border-color;
   padding: 1em;
+}
+
+@media screen and (max-width: 500px){
+  .docHeader{
+    .docLogo{
+
+    }
+    .docSideBar{
+      display: block;
+    }
+  }
+  .docAside{
+    position: absolute;
+    right: 100%;
+    top: 0;
+  }
 }
