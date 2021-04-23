@@ -1372,10 +1372,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@testing-library/react-hooks@^5.1.1":
-  version "5.1.1"
-  resolved "https://registry.npmjs.org/@testing-library/react-hooks/-/react-hooks-5.1.1.tgz#1fbaae8a4e8a4a7f97b176c23e1e890c41bbbfa5"
-  integrity sha512-52D2XnpelFDefnWpy/V6z2qGNj8JLIvW5DjYtelMvFXdEyWiykSaI7IXHwFy4ICoqXJDmmwHAiFRiFboub/U5g==
+"@testing-library/react-hooks@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.nlark.com/@testing-library/react-hooks/download/@testing-library/react-hooks-5.1.2.tgz?cache=0&sync_timestamp=1619097394355&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40testing-library%2Freact-hooks%2Fdownload%2F%40testing-library%2Freact-hooks-5.1.2.tgz#36e359d992bb652a9885c6fa9aa394639cbe8dd3"
+  integrity sha1-NuNZ2ZK7ZSqYhcb6mqOUY5y+jdM=
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@types/react" ">=16.9.0"
