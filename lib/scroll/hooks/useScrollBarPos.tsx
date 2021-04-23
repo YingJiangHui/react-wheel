@@ -53,7 +53,6 @@ const useScrollBarPos = (props: useScrollProps) => {
   const [status,_setStatus] = useState<Status>('none');
   const [lifeLine,setLifeLine] = useState<(disStatus|ableStatus)[]>([])
   
-  
   const containerRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef<boolean>(false);
   const barFirstClientYRef = useRef(0);
@@ -63,6 +62,7 @@ const useScrollBarPos = (props: useScrollProps) => {
   const touchTriggerRef = useRef(false)
   const timerRef = useRef<number>()
   const isUpGlideLoad = useRef<boolean>(true)
+  const lastScrollTop = useRef<number>(0)
   
   useEffect(() => {
     const onStatusEventMap:Omit<StatusToOtherMap<"Event">,'onCancelUpdate'|'onUpGlideLoad'> = {
@@ -187,8 +187,9 @@ const useScrollBarPos = (props: useScrollProps) => {
     }
     e.preventDefault();
     setBarPosState(containerInfo);
-    if(scrollTop+viewHeight+100>=scrollHeight)
+    if(scrollTop+viewHeight+100>=scrollHeight&&lastScrollTop.current<scrollTop)
       onUpGlideLoad()
+    lastScrollTop.current = scrollTop
   };
   const onTransitionEnd = ()=>{
     if(status==='completed'||status==="disUpdate"){
@@ -221,8 +222,10 @@ const useScrollBarPos = (props: useScrollProps) => {
   const onCancelUpdate = ()=>{
     onEvent?.()['onCancelUpdate']?.()
   }
+  
   const onEnd = ()=>{
   }
+  
   const onUpGlideLoad = ()=>{
     if(isUpGlideLoad.current){
       isUpGlideLoad.current = false
