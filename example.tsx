@@ -10,18 +10,25 @@ import LayoutDemo from "./lib/layout/layout.demo";
 import FormExample from "./lib/form/form.example";
 import ScrollExample from './lib/scroll/scroll.example';
 import GridDemo from './lib/grid/grid.demo';
+import {Icon} from './lib';
+import useHomeService from './service/useHomeService';
+
 const App: React.FC = () => {
+  const {onClickSideBar,asideVisible,asideStyleTransform} = useHomeService()
   return (
     <Router>
       <div className="docPage">
         <Layout>
           <Header className="docHeader">
-            
-            <div className="docSideBar">side bar</div>
             <div className="docLogo">logo</div>
+            {asideVisible?
+              <div className="docSideBar" onClick={onClickSideBar}><Icon name={'side-bar-close'}/></div>
+              :
+              <div className="docSideBar" onClick={onClickSideBar}><Icon name={'side-bar-open'}/></div>
+            }
           </Header>
           <Layout className='docMain'>
-            <Aside className="docAside">
+            <Aside className="docAside" style={{...asideStyleTransform}}>
               <div className="docNavLinks">
                 <NavLink to='/icon'>icon</NavLink>
                 <NavLink to={'/button'}>button</NavLink>
