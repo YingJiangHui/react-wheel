@@ -74,7 +74,6 @@ const useScrollBarPos = (props: useScrollProps) => {
     setStatus(lifeLine[count])
   },[lifeLine,count])
   useEffect(() => {
-    setBarPosState(getContainerInfo());
     document.addEventListener('mouseup',onMouseUpBar);
     document.addEventListener('mousemove',onMouseMoveBar);
     document.addEventListener('selectstart',onSelectStart);
@@ -85,7 +84,17 @@ const useScrollBarPos = (props: useScrollProps) => {
       window.clearTimeout(timerRef.current)
     };
   },[]);
-
+  
+  useEffect(()=>{
+    if(status==='updating'&&!updating)
+      increment()
+  },[updating])
+  
+  useEffect(()=>{
+    if(!upGlideLoading)
+    setBarPosState(getContainerInfo());
+  },[upGlideLoading])
+  
   const {scrollBarWidth} = useCalculateScrollBarWidth();
   const animationStyle = useMemo(()=>({transition:touchTriggerRef.current?`none 0s`:`transform 0.25s`}),[touchTriggerRef.current])
   const updatableRate = useMemo(()=>pullTop>=updatableDistance?100:pullTop/updatableDistance*100,[pullTop,updatableDistance])
@@ -93,11 +102,11 @@ const useScrollBarPos = (props: useScrollProps) => {
   const getContainerInfo = () => {
     const {current} = containerRef;
     return {
-      current,viewHeight: current!.getBoundingClientRect().height,scrollHeight: current!.scrollHeight,scrollTop: current!.scrollTop
+      current,viewHeight: current!.clientHeight,scrollHeight: current!.scrollHeight,scrollTop: current!.scrollTop
     };
   };
   const setBarPosState = ({scrollTop,viewHeight,scrollHeight}: ScrollContainer) => {
-    setBarHeight(calculateBarHeight({viewHeight,scrollHeight}));
+    setBarHeight(viewHeight===scrollHeight?0:calculateBarHeight({viewHeight,scrollHeight}));
     setBarTop(calculateBarTop({scrollTop,viewHeight,scrollHeight}));
   };
   
@@ -235,11 +244,6 @@ const useScrollBarPos = (props: useScrollProps) => {
     if(status==='updating')
       increment()
   };
-  
-  useEffect(()=>{
-    if(status==='updating'&&!updating)
-      increment()
-  },[updating])
   
   const getScrollContainerProps: DivFunc = (props) => {
     const ref = containerRef;
