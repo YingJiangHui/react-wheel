@@ -3,9 +3,9 @@
 }
 
 @for $i from 1 through 24 {
-  .makabaka-row-span-#{$i} { width: "#{100/$i}%"; }
+  .makabaka-col-span-#{$i} { width: #{100/24*$i}+"%" }
 }
 
 @for $i from 1 through 24 {
-  .makabaka-row-offset-#{$i} { margin-right: "#{100/$i}%"; }
+  .makabaka-col-offset-#{$i} { margin-left: #{100/24*$i}+"%"; }
 }

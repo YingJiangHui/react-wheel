@@ -9,6 +9,7 @@ import './global.scss'
 import LayoutDemo from "./lib/layout/layout.demo";
 import FormExample from "./lib/form/form.example";
 import ScrollExample from './lib/scroll/scroll.example';
+import GridExample from './lib/grid/grid.example';
 const App: React.FC = () => {
   return (
     <Router>
@@ -28,6 +29,7 @@ const App: React.FC = () => {
                 <NavLink to={'/layout'}>layout</NavLink>
                 <NavLink to={'/form'}>form</NavLink>
                 <NavLink to={'/scroll'}>scroll</NavLink>
+                <NavLink to={'/grid'}>grid</NavLink>
               </div>
             </Aside>
             <Content className="docContent">
@@ -38,6 +40,7 @@ const App: React.FC = () => {
                 <Route component={LayoutDemo} path={'/layout'}/>
                 <Route component={FormExample} path={'/form'}/>
                 <Route component={ScrollExample} path={'/scroll'}/>
+                <Route component={GridExample} path={'/grid'}/>
               </div>
             </Content>
           </Layout>

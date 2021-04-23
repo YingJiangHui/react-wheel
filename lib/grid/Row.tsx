@@ -1,14 +1,15 @@
 import React from 'react'
-import {scopedClass} from "../helper/scopedClass";
-
+import useClassName from '../hooks/useClassName';
+import './Row.scss'
 interface RowProps {
   children?: React.ReactNode
+  className?: string
 }
 
-const sc = scopedClass('makabaka-row')
 const Row:React.FC = (props:RowProps)=>{
-  const {children} = props
-  return (<div className={sc()}>{children}</div>)
+  const {children,className=''} = props
+  const {classNames} = useClassName({extraClassName:['makabaka-row',className]})
+  return (<div className={classNames}>{children}</div>)
 }
 
 export default Row
