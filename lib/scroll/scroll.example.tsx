@@ -8,27 +8,23 @@ interface scrollExampleProps{
 
 const scrollExample:FC<scrollExampleProps> = (props)=>{
   const timerRef = useRef(0)
-  const {getScrollPropsMap,status,completed} = useScrollBarPos({
+  const {getScrollPropsMap,status,upGlideLoaded} = useScrollBarPos({
     onEvent:()=>{
       return {
-        onSlideDownRefresh:()=>{
-          console.log('refresh')
-        },
-        onCancelRefresh:()=>{
+        onUpGlideLoad:()=>{
           clearTimeout(timerRef.current)
-        },
-        onRefreshing:()=>{
-          timerRef.current = window.setTimeout(()=>{
-            completed()
+          setTimeout(()=>{
+            upGlideLoaded()
           },1000)
+          console.log("load")
         }
       }
     }
   });
   const map = {
-    'refreshing':'refreshing',
-    'refreshable':'refreshable',
-    'disRefresh':'disRefresh',
+    'updating':'updating',
+    'updatable':'updatable',
+    'disUpdate':'disUpdate',
     'completed':'completed',
     'none':'none'
   }

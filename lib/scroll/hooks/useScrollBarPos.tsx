@@ -8,15 +8,15 @@ type DivFunc = (props?: React.HTMLAttributes<HTMLDivElement>) => React.DetailedH
 
 export type ScrollContainer = {scrollTop?: number,viewHeight?: number,scrollHeight?: number}
 
-export type EventName = "onRefreshable" | "onRefreshing" | "onDisRefresh"| "onCompleted"|"onEnd"|"onCancelRefresh" | "onSlideDownRefresh"
+export type EventName = "onUpdatable" | "onUpdating" | "onDisUpdate"| "onCompleted"|"onEnd"|"onCancelUpdate" | "onUpGlideLoad"
 
-export type StatusToOtherMap<Type> = Type extends "Event" ? {[key in EventName]:()=>void}:{[key in Status]:Exclude<EventName,"onCancelRefresh"|"onSlideDownRefresh">}
+export type StatusToOtherMap<Type> = Type extends "Event" ? {[key in EventName]:()=>void}:{[key in Status]:Exclude<EventName,"onCancelUpdate"|"onUpGlideLoad">}
 
 export type EventMap = Partial<StatusToOtherMap<"Event">>
 
 
-export type ableStatus = 'refreshable'|'refreshing'|'completed'|'none'
-export type disStatus =  'disRefresh'|'none'
+export type ableStatus = 'updatable'|'updating'|'completed'|'none'
+export type disStatus =  'disUpdate'|'none'
 export type Status = ableStatus|disStatus
 
 export interface GetScrollPropsMap {
@@ -25,26 +25,26 @@ export interface GetScrollPropsMap {
 export interface useScrollProps {
   onEvent?:()=>EventMap
   waitingDistance?:number
-  refreshableDistance?:number
+  updatableDistance?:number
   maxDropDownDistance?:number
   completedWaitTime?:number
   
 }
 
-const lifeCycleMap:{"disRefresh":disStatus[],"refreshable":ableStatus[]} = {
-  'refreshable':['refreshable','refreshing','completed','none'],
-  'disRefresh':['disRefresh','none']
+const lifeCycleMap:{"disUpdate":disStatus[],"updatable":ableStatus[]} = {
+  'updatable':['updatable','updating','completed','none'],
+  'disUpdate':['disUpdate','none']
 }
 
 const statusToEvent:StatusToOtherMap<"EventName"> = {
-  'refreshable': 'onRefreshable','refreshing': 'onRefreshing','disRefresh': 'onDisRefresh','completed': 'onCompleted','none': 'onEnd'
+  'updatable': 'onUpdatable','updating': 'onUpdating','disUpdate': 'onDisUpdate','completed': 'onCompleted','none': 'onEnd'
 };
 
-const statusList:Status[] = Array.from(new Set(lifeCycleMap['refreshable'].concat(lifeCycleMap['disRefresh'] as ableStatus[])))
+const statusList:Status[] = Array.from(new Set(lifeCycleMap['updatable'].concat(lifeCycleMap['disUpdate'] as ableStatus[])))
 
 
 const useScrollBarPos = (props: useScrollProps) => {
-  const {refreshableDistance=100,waitingDistance = 60,onEvent,maxDropDownDistance=9999,completedWaitTime=0} = props;
+  const {updatableDistance=100,waitingDistance = 60,onEvent,maxDropDownDistance=9999,completedWaitTime=0} = props;
   
   const {count,increment,reset} = useCounter()
   const [barHeight,setBarHeight] = useState(0);
@@ -52,6 +52,7 @@ const useScrollBarPos = (props: useScrollProps) => {
   const [pullTop,_setPullTop] = useState(0);
   const [status,_setStatus] = useState<Status>('none');
   const [lifeLine,setLifeLine] = useState<(disStatus|ableStatus)[]>([])
+  
   
   const containerRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef<boolean>(false);
@@ -61,10 +62,11 @@ const useScrollBarPos = (props: useScrollProps) => {
   const touchLastClientYRef = useRef(0);
   const touchTriggerRef = useRef(false)
   const timerRef = useRef<number>()
+  const isUpGlideLoad = useRef<boolean>(true)
   
   useEffect(() => {
-    const onStatusEventMap:Omit<StatusToOtherMap<"Event">,'onCancelRefresh'|'onSlideDownRefresh'> = {
-      onRefreshable, onRefreshing,onDisRefresh, onCompleted,onEnd
+    const onStatusEventMap:Omit<StatusToOtherMap<"Event">,'onCancelUpdate'|'onUpGlideLoad'> = {
+      onUpdatable, onUpdating,onDisUpdate, onCompleted,onEnd
     };
     onStatusEventMap[statusToEvent[status]]() // 内部事件
     onEvent?.()[statusToEvent[status]]?.() // 用户事件
@@ -87,7 +89,7 @@ const useScrollBarPos = (props: useScrollProps) => {
 
   const {scrollBarWidth} = useCalculateScrollBarWidth();
   const animationStyle = useMemo(()=>({transition:touchTriggerRef.current?`none 0s`:`transform 0.25s`}),[touchTriggerRef.current])
-  const refreshableRate = useMemo(()=>pullTop>=refreshableDistance?100:pullTop/refreshableDistance*100,[pullTop,refreshableDistance])
+  const updatableRate = useMemo(()=>pullTop>=updatableDistance?100:pullTop/updatableDistance*100,[pullTop,updatableDistance])
   
   const getContainerInfo = () => {
     const {current} = containerRef;
@@ -102,8 +104,8 @@ const useScrollBarPos = (props: useScrollProps) => {
   
   const setStatus = (status: Status) => {
     status&&_setStatus((s)=>{
-      if(s==='refreshing'&&(status==='refreshable'||status==='disRefresh'))
-        onCancelRefresh?.()
+      if(s==='updating'&&(status==='updatable'||status==='disUpdate'))
+        onCancelUpdate?.()
       if(statusList.indexOf(status)===-1)
         return s
       return status
@@ -163,16 +165,16 @@ const useScrollBarPos = (props: useScrollProps) => {
     if (!isPullingRef.current && pullTop === 0) return;
     const newPullTop = delta + pullTop
     setPullTop(newPullTop);
-    setStatus(newPullTop>=refreshableDistance?'refreshable':'disRefresh')
+    setStatus(newPullTop>=updatableDistance?'updatable':'disUpdate')
   };
   const onTouchEnd = () => {
     touchTriggerRef.current = false
     if (isPullingRef.current) {
       reset()
-      if(pullTop>=refreshableDistance){
-        setLifeLine(lifeCycleMap['refreshable'])
+      if(pullTop>=updatableDistance){
+        setLifeLine(lifeCycleMap['updatable'])
       }else{
-        setLifeLine(lifeCycleMap['disRefresh'])
+        setLifeLine(lifeCycleMap['disUpdate'])
       }
     }
   };
@@ -186,24 +188,24 @@ const useScrollBarPos = (props: useScrollProps) => {
     e.preventDefault();
     setBarPosState(containerInfo);
     if(scrollTop+viewHeight+100>=scrollHeight)
-      onSlideDownRefresh()
+      onUpGlideLoad()
   };
   const onTransitionEnd = ()=>{
-    if(status==='completed'||status==="disRefresh"){
+    if(status==='completed'||status==="disUpdate"){
       increment()
     }
   }
   const onSelect = (e: SyntheticEvent<HTMLDivElement>) => e.preventDefault();
   
-  const onRefreshable=()=> {
+  const onUpdatable=()=> {
     if(!touchTriggerRef.current)
     increment()
   }
-  const onDisRefresh=()=> {
+  const onDisUpdate=()=> {
     if(!touchTriggerRef.current)
       setPullTop(0)
   }
-  const onRefreshing=()=> {
+  const onUpdating=()=> {
     setPullTop(waitingDistance)
   }
   const onCompleted=()=> {
@@ -216,17 +218,24 @@ const useScrollBarPos = (props: useScrollProps) => {
       setPullTop(0)
     }
   }
-  const onCancelRefresh = ()=>{
-    onEvent?.()['onCancelRefresh']?.()
+  const onCancelUpdate = ()=>{
+    onEvent?.()['onCancelUpdate']?.()
   }
   const onEnd = ()=>{
   }
-  const onSlideDownRefresh = ()=>{
-    onEvent?.()['onSlideDownRefresh']?.()
+  const onUpGlideLoad = ()=>{
+    if(isUpGlideLoad.current){
+      isUpGlideLoad.current = false
+      onEvent?.()['onUpGlideLoad']?.()
+    }
   }
   
-  const completed = () => {
-    if(status==='refreshing')
+  const upGlideLoaded = ()=>{
+    isUpGlideLoad.current = true
+  }
+  
+  const downGlideUpdated = () => {
+    if(status==='updating')
       increment()
   };
   
@@ -268,7 +277,7 @@ const useScrollBarPos = (props: useScrollProps) => {
     getScrollPropsMap:{
       getScrollContainerProps,getScrollBarProps,getPullingAnimationProps,getTrackProps
     },
-    status,completed,touchTrigger:touchTriggerRef.current,refreshableRate
+    status,touchTrigger:touchTriggerRef.current,updatableRate,upGlideLoaded,downGlideUpdated
   };
 };
 
