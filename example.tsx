@@ -9,7 +9,7 @@ import './global.scss'
 import LayoutDemo from "./lib/layout/layout.demo";
 import FormExample from "./lib/form/form.example";
 import ScrollExample from './lib/scroll/scroll.example';
-import GridExample from './lib/grid/grid.example';
+import GridDemo from './lib/grid/grid.demo';
 const App: React.FC = () => {
   return (
     <Router>
@@ -40,7 +40,7 @@ const App: React.FC = () => {
                 <Route component={LayoutDemo} path={'/layout'}/>
                 <Route component={FormExample} path={'/form'}/>
                 <Route component={ScrollExample} path={'/scroll'}/>
-                <Route component={GridExample} path={'/grid'}/>
+                <Route component={GridDemo} path={'/grid'}/>
               </div>
             </Content>
           </Layout>
