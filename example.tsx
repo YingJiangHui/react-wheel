@@ -12,9 +12,11 @@ import ScrollExample from './lib/scroll/scroll.example';
 import GridDemo from './lib/grid/grid.demo';
 import {Icon} from './lib';
 import useHomeService from './service/useHomeService';
+import useClassName from "./lib/hooks/useClassName";
 
 const App: React.FC = () => {
-  const {onClickSideBar,asideVisible,asideStyleTransform} = useHomeService()
+  const {onClickSideBar,asideVisible} = useHomeService()
+  const {classNames} = useClassName()
   return (
     <Router>
       <div className="docPage">
@@ -30,7 +32,7 @@ const App: React.FC = () => {
             </div>
           </Header>
           <Layout className='docMain docContainer'>
-            <Aside className="docAside" style={{...asideStyleTransform}}>
+            <Aside className="docAside">
               <div className="docNavLinks">
                 <NavLink to='/icon'>Icon</NavLink>
                 <NavLink to={'/button'}>Button</NavLink>

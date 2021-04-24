@@ -8,14 +8,14 @@ interface ColProps {
   className?: string
 }
 const Col:FC<ColProps> = (props)=>{
-  const {classNames,setClassNames} = useClassName({prefix:'makabaka-col',extraClassName:['makabaka-col']})
+  const {classNames,classNames} = useClassName({prefix:'makabaka-col',extraClassName:['makabaka-col']})
   const {children,span:_span,offset:_offset,className=''} = props
 
   useEffect(()=>{
     const span = `span-${_span}`
     const offset = `offset-${_offset}`
 
-    setClassNames({
+    classNames({
       [className]:Boolean(className),
       [span]: Boolean(_span),
       [offset]: Boolean(_offset)

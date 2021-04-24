@@ -1,24 +1,29 @@
-import {useState} from 'react';
-
 interface UseClassesProps{
   prefix?: string
-  extraClassName?: (string|number)[]
 }
 
 
 const useClassName = (props:UseClassesProps={})=>{
-  const {prefix,extraClassName=[]} = props
-  const [classNames,_setClassNames] = useState<string>(extraClassName.join(' '))
+  const {prefix} = props
   
-  function setClassNames(arg1:{[key in number|string]:boolean}):void
-  function setClassNames(arg1:string,...args:string[]):void
-  function setClassNames (arg1:{[key in number|string]:boolean}|string,...args:string[]){
-    const cns =typeof arg1 ==='object'? Object.keys(arg1).reduce((arr:(string|number)[],key)=>(arg1[key]?[...arr,key]:arr),[]):[arg1].concat(args)
-    _setClassNames(extraClassName.concat(cns.map(arg=>prefix+'-'+arg)).join(' '))
+  function classNames(arg1:{[key in number|string]:boolean}):string
+  function classNames(arg1:string, ...args:string[]):string
+  function classNames(arg1:(string)[], ...args:string[]):string
+  function classNames (arg1:{[key in number|string]:boolean}|string|string[],...args:string[]){
+    let cns:(string|number)[] = []
+    if(arg1.constructor === Object){
+      cns= (Object.keys(arg1) as (string|number)[]).reduce((arr:(string|number)[],key)=>(arg1[key as number]?[...arr,key]:arr),[])
+    }else if(arg1.constructor === String){
+      cns = [arg1]
+    }
+    cns = cns.concat(args).map(arg=>prefix?prefix+'-'+arg:arg.toString())
+    if(arg1.constructor === Array){
+      return arg1.concat(cns as string[]).join(' ')
+    }
+    return cns.join(' ')
   }
-  
   return {
-    setClassNames,classNames
+    classNames
   }
 }
 export default useClassName
