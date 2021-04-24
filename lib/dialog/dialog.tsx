@@ -50,11 +50,11 @@ Dialog.defaultProps = {
 const modal = ({content, yes, no, title,buttons,clickMaskClose=true}: { content: React.ReactNode, title?: string, buttons?: Array<ReactElement>, no?: () => void, yes?: () => void ,clickMaskClose?:boolean}) => {
   const onYes = ()=>{
     close()
-    yes &&yes()
+    yes?.()
   }
   const onNo = ()=>{
     close()
-    no&&no()
+    no?.()
   }
   const close = () => {
     ReactDOM.render(React.cloneElement(component, {visible: false}), div);
