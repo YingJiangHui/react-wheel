@@ -27,7 +27,7 @@ $accents-9: #000;
 $header-height: 64px;
 $bar-link-size: 14px;
 $bar-link-lineHeight: 24px;
-
+$header-background: hsla(0,0%,100%,0.8);
 
 html,body{
   font-family: $font-sans;
@@ -43,19 +43,7 @@ a{
   text-decoration: none;
   color: #000;
 }
-:root{
-  --header-background: hsla(0,0%,100%,0.8);
-  --geist-foreground: #000;
-  --geist-background: #fff;
-  --accents-1: #fafafa;
-  --accents-2: #eaeaea;
-  --accents-3: #999;
-  --accents-4: #888;
-  --accents-5: #666;
-  --accents-6: #444;
-  --accents-7: #333;
-  --accents-8: #111;
-}
+
 .docContainer{
   max-width:$geist-max-width-docPage;
   margin: 0 auto;
@@ -64,7 +52,7 @@ a{
 }
 .docHeader{
   height: $header-height;
-  background-color: var(--header-background);
+  background-color: $header-background;
   z-index: 1;
   top: 0;
   width: 100%;
