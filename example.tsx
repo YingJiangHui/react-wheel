@@ -20,23 +20,25 @@ const App: React.FC = () => {
       <div className="docPage">
         <Layout>
           <Header className="docHeader">
-            <div className="docLogo">logo</div>
-            {asideVisible?
-              <div className="docSideBar" onClick={onClickSideBar}><Icon name={'side-bar-close'}/></div>
-              :
-              <div className="docSideBar" onClick={onClickSideBar}><Icon name={'side-bar-open'}/></div>
-            }
+            <div className="docContainer">
+              <div className="docLogo">Logo</div>
+              {asideVisible?
+                <div className="docSideBar" onClick={onClickSideBar}><Icon name={'side-bar-close'}/></div>
+                :
+                <div className="docSideBar" onClick={onClickSideBar}><Icon name={'side-bar-open'}/></div>
+              }
+            </div>
           </Header>
-          <Layout className='docMain'>
+          <Layout className='docMain docContainer'>
             <Aside className="docAside" style={{...asideStyleTransform}}>
               <div className="docNavLinks">
-                <NavLink to='/icon'>icon</NavLink>
-                <NavLink to={'/button'}>button</NavLink>
-                <NavLink to={'/dialog'}>dialog</NavLink>
-                <NavLink to={'/layout'}>layout</NavLink>
-                <NavLink to={'/form'}>form</NavLink>
-                <NavLink to={'/scroll'}>scroll</NavLink>
-                <NavLink to={'/grid'}>grid</NavLink>
+                <NavLink to='/icon'>Icon</NavLink>
+                <NavLink to={'/button'}>Button</NavLink>
+                <NavLink to={'/dialog'}>Dialog</NavLink>
+                <NavLink to={'/layout'}>Layout</NavLink>
+                <NavLink to={'/form'}>Form</NavLink>
+                <NavLink to={'/scroll'}>Scroll</NavLink>
+                <NavLink to={'/grid'}>Grid</NavLink>
               </div>
             </Aside>
             <Content className="docContent">
@@ -51,7 +53,11 @@ const App: React.FC = () => {
               </div>
             </Content>
           </Layout>
-          <Footer className="docFooter">&copy; YingJiangHui</Footer>
+          <Footer className="docFooter">
+            <div className="docContainer">
+              &copy; YingJiangHui
+            </div>
+          </Footer>
         </Layout>
       </div>
     </Router>

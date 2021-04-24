@@ -14,8 +14,6 @@ const Col:FC<ColProps> = (props)=>{
   useEffect(()=>{
     const span = `span-${_span}`
     const offset = `offset-${_offset}`
-    console.log(span)
-    console.log(offset)
 
     setClassNames({
       [className]:Boolean(className),
