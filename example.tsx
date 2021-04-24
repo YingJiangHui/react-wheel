@@ -15,8 +15,26 @@ import useHomeService from './service/useHomeService';
 import useClassName from "./lib/hooks/useClassName";
 
 const App: React.FC = () => {
-  const {onClickSideBar,asideVisible} = useHomeService()
+  const {onClickSideBar,asideVisible,windowInnerWidth} = useHomeService()
   const {classNames} = useClassName()
+  console.log(windowInnerWidth)
+  const asideDom = (<Aside className={classNames({map:{"openAside":asideVisible},extra:['docAside']})}>
+    {windowInnerWidth<=500&&(asideVisible?
+      <div className="docSideBar" onClick={onClickSideBar}><Icon name={'side-bar-close'}/></div>
+      :
+      <div className="docSideBar" onClick={onClickSideBar}><Icon name={'side-bar-open'}/></div>)
+    }
+    <div className="docNavLinks">
+      <NavLink to='/icon'>Icon</NavLink>
+      <NavLink to={'/button'}>Button</NavLink>
+      <NavLink to={'/dialog'}>Dialog</NavLink>
+      <NavLink to={'/layout'}>Layout</NavLink>
+      <NavLink to={'/form'}>Form</NavLink>
+      <NavLink to={'/scroll'}>Scroll</NavLink>
+      <NavLink to={'/grid'}>Grid</NavLink>
+    </div>
+  </Aside>)
+
   return (
     <Router>
       <div className="docPage">
@@ -24,25 +42,10 @@ const App: React.FC = () => {
           <Header className="docHeader">
             <div className="docContainer">
               <div className="docLogo">Logo</div>
-              {asideVisible?
-                <div className="docSideBar" onClick={onClickSideBar}><Icon name={'side-bar-close'}/></div>
-                :
-                <div className="docSideBar" onClick={onClickSideBar}><Icon name={'side-bar-open'}/></div>
-              }
             </div>
           </Header>
           <Layout className='docMain docContainer'>
-            <Aside className="docAside">
-              <div className="docNavLinks">
-                <NavLink to='/icon'>Icon</NavLink>
-                <NavLink to={'/button'}>Button</NavLink>
-                <NavLink to={'/dialog'}>Dialog</NavLink>
-                <NavLink to={'/layout'}>Layout</NavLink>
-                <NavLink to={'/form'}>Form</NavLink>
-                <NavLink to={'/scroll'}>Scroll</NavLink>
-                <NavLink to={'/grid'}>Grid</NavLink>
-              </div>
-            </Aside>
+            {windowInnerWidth >500?asideDom:<></>}
             <Content className="docContent">
               <div>
                 <Route component={IconExample} path={'/icon'}/>
@@ -61,6 +64,7 @@ const App: React.FC = () => {
             </div>
           </Footer>
         </Layout>
+        {windowInnerWidth <= 500?asideDom:<></>}
       </div>
     </Router>
 

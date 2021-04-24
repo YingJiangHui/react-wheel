@@ -67,7 +67,8 @@ a{
   background-color: var(--header-background);
   z-index: 1;
   top: 0;
-  position: sticky;
+  width: 100%;
+  position: fixed;
   border-bottom: 1px solid $border-color;
   box-shadow: 0 0 15px 0 rgb(0 0 0 / 10%);
 
@@ -84,20 +85,20 @@ a{
   }
 }
 .docPage{
+  overflow: hidden;
+  position: relative;
   background-color: $geist-background-docPage
 }
 .docMain{
   overflow: hidden;
-  padding-top: 68px;
-  padding-bottom: 68px;
+  padding-top: calc(48px + #{$header-height});
+  padding-bottom: 48px;
   margin: 0 auto;
   position: relative;
 }
 .docAside{
-  border-right: 1px solid $accents-2;
+  border-right: 1px solid $accents-1;
   top: 0;
-  position: sticky;
-  overflow: auto;
   width: 222px;
   background: #fff;
   >.docNavLinks {
@@ -128,11 +129,20 @@ a{
 
 @media screen and (max-width: 500px){
   .docHeader{
+    background-color: #fff ;
     .docLogo{
-    
+
     }
-    .docSideBar{
-      display: block;
+
+  }
+  $translateXSize:48px;
+  .docSideBar{
+    height: $header-height;
+    display: flex;
+    align-items: center;
+    .makabaka-icon{
+      transition: .25s transform;
+      transform: translateX( calc( (0px - 100% - #{$translateXSize}) ));
     }
   }
   .docContent{
@@ -141,28 +151,28 @@ a{
   .docAside{
     padding-left: 1em;
     width: 200px;
-    height: 100%;
     border-left: 1px solid $border-color;
-    position: absolute;
+    border-bottom: 1px solid $border-color;
+    border-right: none;
+    border-bottom-left-radius: 2px;
+    position: fixed;
     right: 0;
+    z-index: 5;
+    transition: .25s transform,opacity;
     transform: translateX(100%);
-  }
-}
-
-@keyframes moveIn {
-  0%{
-    transform: translateX(100%);
-  }
-  100%{
-    transform: translateX(0%);
-  }
-}
-
-@keyframes moveOut {
-  0%{
-    transform: translateX(0%);
-  }
-  100%{
-    transform: translateX(100%);
+    .makabaka-icon{
+      cursor: pointer;
+    }
+    &.openAside{
+      transform: translateX(0);
+      .docSideBar{
+        margin-left: calc(-1em - 1px);
+        padding-left:calc(1em + 1px);
+        border:1px solid $geist-background-docPage;
+        .makabaka-icon{
+          transform: translateX(0);
+        }
+      }
+    }
   }
 }
