@@ -8,8 +8,8 @@ interface RowProps {
 
 const Row:React.FC = (props:RowProps)=>{
   const {children,className=''} = props
-  const {classNames} = useClassName({extraClassName:['makabaka-row',className]})
-  return (<div className={classNames}>{children}</div>)
+  const {classNames} = useClassName({prefix:'makabaka-row'})
+  return (<div className={classNames({extra:['makabaka-row',className]})}>{children}</div>)
 }
 
 export default Row
