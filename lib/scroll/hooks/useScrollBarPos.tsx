@@ -30,7 +30,9 @@ export interface useScrollProps {
   maxDropDownDistance?:number
   completedWaitTime?:number
   upGlideLoading?:boolean
-  updating?:boolean
+  dropDownUpdating?:boolean
+  enableUpGlideLoad?:boolean // 启用下滑加载 default false
+  disableDropDownUpdate?:boolean // 禁用下拉更新 default false
 }
 
 const lifeCycleMap:{"disUpdate":disStatus[],"updatable":ableStatus[]} = {
@@ -46,7 +48,7 @@ const statusList:Status[] = Array.from(new Set(lifeCycleMap['updatable'].concat(
 
 
 const useScrollBarPos = (props: useScrollProps) => {
-  const {updatableDistance=100,waitingDistance = 60,onEvent,maxDropDownDistance=9999,completedWaitTime=0,upGlideLoading=false,updating=false} = props;
+  const {updatableDistance=100,waitingDistance = 60,onEvent,maxDropDownDistance=9999,completedWaitTime=0,upGlideLoading=false,dropDownUpdating=false,disableDropDownUpdate=false,enableUpGlideLoad=false} = props;
   const {count,increment,reset} = useCounter()
   const {setTimeout} = useTimeout()
   
@@ -89,9 +91,9 @@ const useScrollBarPos = (props: useScrollProps) => {
   },[]);
   
   useEffect(()=>{
-    if(status==='updating'&&!updating)
+    if(status==='updating'&&!dropDownUpdating)
       increment()
-  },[updating])
+  },[dropDownUpdating])
   
   useEffect(()=>{
     if(!upGlideLoading)
@@ -194,16 +196,19 @@ const useScrollBarPos = (props: useScrollProps) => {
     }
   };
   
+  const onUpGlideLoad = ({scrollTop,scrollHeight,viewHeight}:{scrollTop:number,scrollHeight:number,viewHeight:number})=>{
+    if(scrollTop+viewHeight+300>=scrollHeight&&lastScrollTop.current<scrollTop&&enableUpGlideLoad&&!upGlideLoading)
+      onEvent?.()['onUpGlideLoad']?.()
+  }
+  
   const onScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    e.preventDefault();
     const containerInfo = getSizes()
     const {scrollTop,scrollHeight,viewHeight} = containerInfo
-    if (pullTop !== 0) {
+    if (pullTop !== 0)
       e.currentTarget.scrollTop = 0;
-    }
-    e.preventDefault();
     setBarPosState(containerInfo);
-    if(scrollTop+viewHeight+100>=scrollHeight&&lastScrollTop.current<scrollTop)
-      onUpGlideLoad()
+    onUpGlideLoad({scrollTop,scrollHeight,viewHeight})
     lastScrollTop.current = scrollTop
   };
   const onTransitionEnd = ()=>{
@@ -240,12 +245,6 @@ const useScrollBarPos = (props: useScrollProps) => {
   const onEnd = ()=>{
   }
   
-  const onUpGlideLoad = ()=>{
-    if(!upGlideLoading){
-      onEvent?.()['onUpGlideLoad']?.()
-    }
-  }
-  
   const downGlideUpdated = () => {
     if(status==='updating')
       increment()
@@ -253,11 +252,15 @@ const useScrollBarPos = (props: useScrollProps) => {
   
   const getScrollContainerProps: DivFunc = (props) => {
     const ref = containerRef;
+    const _onTouchStart = !disableDropDownUpdate?onTouchStart:()=>{}
+    const _onTouchMove = !disableDropDownUpdate?onTouchMove:()=>{}
+    const _onTouchEnd = !disableDropDownUpdate?onTouchEnd:()=>{}
+
     return {
       style:{right: -scrollBarWidth,transform: `translateY(${pullTop}px)`,...animationStyle,...props?.style},
-      onTouchStart: mixExec(props?.onTouchStart)(onTouchStart),
-      onTouchMove: mixExec(props?.onTouchMove)(onTouchMove),
-      onTouchEnd: mixExec(props?.onTouchEnd)(onTouchEnd),
+      onTouchStart: mixExec(props?.onTouchStart)(_onTouchStart),
+      onTouchMove: mixExec(props?.onTouchMove)(_onTouchMove),
+      onTouchEnd: mixExec(props?.onTouchEnd)(_onTouchEnd),
       onScroll: mixExec(props?.onScroll)(onScroll),
       onSelect: mixExec(props?.onSelect)(onSelect),
       onTransitionEnd: mixExec(props?.onTransitionEnd)(onTransitionEnd),

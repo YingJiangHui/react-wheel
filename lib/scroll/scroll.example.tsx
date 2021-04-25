@@ -28,7 +28,7 @@ const scrollExample: FC<scrollExampleProps> = (props) => {
     })
   },[])
   const {getScrollPropsMap,status} = useScrollBarPos({
-    upGlideLoading: loading,updating: loading,onEvent: () => {
+    upGlideLoading: loading,dropDownUpdating: loading,disableDropDownUpdate:false,enableUpGlideLoad:true,onEvent: () => {
       return {
         onCancelUpdate: () => {
           console.log('cancel');
