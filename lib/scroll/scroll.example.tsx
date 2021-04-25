@@ -1,6 +1,7 @@
 import React,{FC,useEffect,useRef,useState} from 'react';
 import Scroll from './scroll';
 import useScrollBarPos from './hooks/useScrollBarPos';
+import useTimeout from '../hooks/useTimeout';
 
 interface scrollExampleProps {
 
@@ -10,14 +11,13 @@ const request = ():Promise<{name:string,age:number}[]> => {
   return new Promise((resolve, reject)=>{
     setTimeout(()=>{
       const a = new Array(40).fill({
-        name: '小明',age: 18
+        name: '小明',age: Math.floor(Math.random()*100)
       })
       resolve(a)
     },500)
   })
 };
 const scrollExample: FC<scrollExampleProps> = (props) => {
-  const timerRef = useRef(0);
   const [loading,setLoading] = useState(false);
   const [data,setData] = useState<{name:string,age:number}[]>([])
   useEffect(()=>{
@@ -32,14 +32,14 @@ const scrollExample: FC<scrollExampleProps> = (props) => {
       return {
         onCancelUpdate: () => {
           console.log('cancel');
-        },onUpdating: () => {
+        },
+        onUpdating: () => {
           setLoading(true);
-          clearTimeout(timerRef.current);
-          setTimeout(() => {
-            // setLoading(false)
-          },1000);
+            request().then((data)=>{
+              setData(data)
+              setLoading(false)
+            })
         },onUpGlideLoad: () => {
-          
           setLoading(true)
           request().then((data)=>{
             setData(d=>d.concat(data))
