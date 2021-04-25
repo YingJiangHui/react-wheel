@@ -15,7 +15,10 @@ const useTimeout= ()=>{
       });
     }
   },[])
-  return {setTimeout}
+  const clearTimeout = (key:string)=>{
+    window.clearTimeout(timerRef.current.get(key))
+  }
+  return {setTimeout,clearTimeout}
 }
 
 export default useTimeout

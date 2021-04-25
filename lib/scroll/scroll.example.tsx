@@ -27,7 +27,7 @@ const scrollExample: FC<scrollExampleProps> = (props) => {
     })
   },[])
   const {getScrollPropsMap,status} = useScroll({
-    upGlideLoading: loading,pullDownUpdating: loading,disablePullDownUpdate:false,enableUpGlideLoad:true,onEvent: () => {
+    upGlideLoading: loading,pullDownUpdating: loading,disablePullDownUpdate:false,enableUpGlideLoad:true,completedWaitTime:1000,onEvent: () => {
       return {
         onCanceledUpdating: () => {
           console.log('cancel');

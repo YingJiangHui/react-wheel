@@ -50,7 +50,7 @@ const statusList:PullDownStatus[] = Array.from(new Set(lifeCycleMap['updatable']
 const useScroll = (props: useScrollProps) => {
   const {updatableDistance=100,waitingDistance = 60,onEvent,maxPullDownDistance=9999,completedWaitTime=0,upGlideLoading=false,pullDownUpdating=false,disablePullDownUpdate=false,enableUpGlideLoad=false} = props;
   const {count,increment,reset} = useCounter()
-  const {setTimeout} = useTimeout()
+  const {setTimeout,clearTimeout} = useTimeout()
   
   const [barHeight,setBarHeight] = useState(0);
   const [barTop,_setBarTop] = useState(0);
@@ -112,7 +112,7 @@ const useScroll = (props: useScrollProps) => {
   };
   const setBarPosState = ({scrollTop,viewHeight,scrollHeight,trackHeight}: ScrollContainer) => {
     setBarVisible(true)
-    setTimeout(1,()=>{
+    setTimeout("barVisibleTimer",()=>{
       setBarVisible(false)
     },5000)
     setBarHeight(viewHeight===scrollHeight?0:calculateBarHeight({trackHeight,viewHeight,scrollHeight}));
@@ -183,6 +183,10 @@ const useScroll = (props: useScrollProps) => {
     const newPullTop = delta + pullTop
     setPullTop(newPullTop);
     setStatus(newPullTop>=updatableDistance?'updatable':'disUpdate')
+    if(delta>0){
+      // 用户正在下拉
+      clearTimeout('completedWaitTimer')
+    }
   };
   const onTouchEnd = () => {
     touchTriggerRef.current = false
@@ -231,7 +235,7 @@ const useScroll = (props: useScrollProps) => {
   }
   const onCompleted=()=> {
     if(completedWaitTime!==0){
-       setTimeout(2,()=>{
+       setTimeout('completedWaitTimer',()=>{
         setPullTop(0)
       },completedWaitTime)
     }else{
