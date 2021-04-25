@@ -9,30 +9,30 @@ type DivFunc = (props?: React.HTMLAttributes<HTMLDivElement>) => React.DetailedH
 
 export type ScrollContainer = {trackHeight?:number,scrollTop?: number,viewHeight?: number,scrollHeight?: number}
 
-export type EventName = "onUpdatable" | "onUpdating" | "onDisUpdate"| "onCompleted"|"onEnd"|"onCancelUpdate" | "onUpGlideLoad"
+export type EventName = "onUpdatable" | "onUpdating" | "onDisUpdate"| "onCompleted"|"onEnd"|"onCanceledUpdating" | "onUpGlideLoad"
 
-export type StatusToOtherMap<Type> = Type extends "Event" ? {[key in EventName]:()=>void}:{[key in Status]:Exclude<EventName,"onCancelUpdate"|"onUpGlideLoad">}
+export type PullDownStatusToOtherMap<Type> = Type extends "Event" ? {[key in EventName]:()=>void}:{[key in PullDownStatus]:Exclude<EventName,"onCanceledUpdating"|"onUpGlideLoad">}
 
-export type EventMap = Partial<StatusToOtherMap<"Event">>
+export type PullDownEventMap = Partial<PullDownStatusToOtherMap<"Event">>
 
 
 export type ableStatus = 'updatable'|'updating'|'completed'|'none'
 export type disStatus =  'disUpdate'|'none'
-export type Status = ableStatus|disStatus
+export type PullDownStatus = ableStatus|disStatus
 
 export interface GetScrollPropsMap {
   getScrollContainerProps:DivFunc,getScrollBarProps:DivFunc,getPullingAnimationProps:DivFunc,getTrackProps:DivFunc
 }
 export interface useScrollProps {
-  onEvent?:()=>EventMap
+  onEvent?:()=>PullDownEventMap
   waitingDistance?:number
   updatableDistance?:number
-  maxDropDownDistance?:number
+  maxPullDownDistance?:number
   completedWaitTime?:number
   upGlideLoading?:boolean
-  dropDownUpdating?:boolean
+  pullDownUpdating?:boolean
   enableUpGlideLoad?:boolean // 启用下滑加载 default false
-  disableDropDownUpdate?:boolean // 禁用下拉更新 default false
+  disablePullDownUpdate?:boolean // 禁用下拉更新 default false
 }
 
 const lifeCycleMap:{"disUpdate":disStatus[],"updatable":ableStatus[]} = {
@@ -40,22 +40,22 @@ const lifeCycleMap:{"disUpdate":disStatus[],"updatable":ableStatus[]} = {
   'disUpdate':['disUpdate','none']
 }
 
-const statusToEvent:StatusToOtherMap<"EventName"> = {
+const pullDownStatusToEventName:PullDownStatusToOtherMap<"EventName"> = {
   'updatable': 'onUpdatable','updating': 'onUpdating','disUpdate': 'onDisUpdate','completed': 'onCompleted','none': 'onEnd'
 };
 
-const statusList:Status[] = Array.from(new Set(lifeCycleMap['updatable'].concat(lifeCycleMap['disUpdate'] as ableStatus[])))
+const statusList:PullDownStatus[] = Array.from(new Set(lifeCycleMap['updatable'].concat(lifeCycleMap['disUpdate'] as ableStatus[])))
 
 
-const useScrollBarPos = (props: useScrollProps) => {
-  const {updatableDistance=100,waitingDistance = 60,onEvent,maxDropDownDistance=9999,completedWaitTime=0,upGlideLoading=false,dropDownUpdating=false,disableDropDownUpdate=false,enableUpGlideLoad=false} = props;
+const useScroll = (props: useScrollProps) => {
+  const {updatableDistance=100,waitingDistance = 60,onEvent,maxPullDownDistance=9999,completedWaitTime=0,upGlideLoading=false,pullDownUpdating=false,disablePullDownUpdate=false,enableUpGlideLoad=false} = props;
   const {count,increment,reset} = useCounter()
   const {setTimeout} = useTimeout()
   
   const [barHeight,setBarHeight] = useState(0);
   const [barTop,_setBarTop] = useState(0);
   const [pullTop,_setPullTop] = useState(0);
-  const [status,_setStatus] = useState<Status>('none');
+  const [status,_setStatus] = useState<PullDownStatus>('none');
   const [lifeLine,setLifeLine] = useState<(disStatus|ableStatus)[]>([])
   const [barVisible,setBarVisible] = useState(false)
   
@@ -70,11 +70,11 @@ const useScrollBarPos = (props: useScrollProps) => {
   const lastScrollTop = useRef<number>(0)
   
   useEffect(() => {
-    const onStatusEventMap:Omit<StatusToOtherMap<"Event">,'onCancelUpdate'|'onUpGlideLoad'> = {
+    const onStatusEventMap:Omit<PullDownStatusToOtherMap<"Event">,'onCanceledUpdating'|'onUpGlideLoad'> = {
       onUpdatable, onUpdating,onDisUpdate, onCompleted,onEnd
     };
-    onStatusEventMap[statusToEvent[status]]() // 内部事件
-    onEvent?.()[statusToEvent[status]]?.() // 用户事件
+    onStatusEventMap[pullDownStatusToEventName[status]]() // 内部事件
+    onEvent?.()[pullDownStatusToEventName[status]]?.() // 用户事件
   },[status,touchTriggerRef.current]);
   useEffect(()=>{
     setStatus(lifeLine[count])
@@ -91,9 +91,9 @@ const useScrollBarPos = (props: useScrollProps) => {
   },[]);
   
   useEffect(()=>{
-    if(status==='updating'&&!dropDownUpdating)
+    if(status==='updating'&&!pullDownUpdating)
       increment()
-  },[dropDownUpdating])
+  },[pullDownUpdating])
   
   useEffect(()=>{
     if(!upGlideLoading)
@@ -119,17 +119,17 @@ const useScrollBarPos = (props: useScrollProps) => {
     setBarTop(calculateBarTop({scrollTop,trackHeight,scrollHeight}));
   };
   
-  const setStatus = (status: Status) => {
+  const setStatus = (status: PullDownStatus) => {
     status&&_setStatus((s)=>{
       if(s==='updating'&&(status==='updatable'||status==='disUpdate'))
-        onCancelUpdate?.()
+        onCanceledUpdating?.()
       if(statusList.indexOf(status)===-1)
         return s
       return status
     });
   };
   const setPullTop = (number: number) => {
-    if (number>maxDropDownDistance) number = maxDropDownDistance
+    if (number>maxPullDownDistance) number = maxPullDownDistance
     if (number < 0) number = 0;
     _setPullTop(number);
   };
@@ -238,8 +238,8 @@ const useScrollBarPos = (props: useScrollProps) => {
       setPullTop(0)
     }
   }
-  const onCancelUpdate = ()=>{
-    onEvent?.()['onCancelUpdate']?.()
+  const onCanceledUpdating = ()=>{
+    onEvent?.()['onCanceledUpdating']?.()
   }
   
   const onEnd = ()=>{
@@ -252,9 +252,9 @@ const useScrollBarPos = (props: useScrollProps) => {
   
   const getScrollContainerProps: DivFunc = (props) => {
     const ref = containerRef;
-    const _onTouchStart = !disableDropDownUpdate?onTouchStart:()=>{}
-    const _onTouchMove = !disableDropDownUpdate?onTouchMove:()=>{}
-    const _onTouchEnd = !disableDropDownUpdate?onTouchEnd:()=>{}
+    const _onTouchStart = !disablePullDownUpdate?onTouchStart:()=>{}
+    const _onTouchMove = !disablePullDownUpdate?onTouchMove:()=>{}
+    const _onTouchEnd = !disablePullDownUpdate?onTouchEnd:()=>{}
 
     return {
       style:{right: -scrollBarWidth,transform: `translateY(${pullTop}px)`,...animationStyle,...props?.style},
@@ -297,4 +297,4 @@ const useScrollBarPos = (props: useScrollProps) => {
   };
 };
 
-export default useScrollBarPos;
+export default useScroll;

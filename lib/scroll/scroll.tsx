@@ -1,7 +1,7 @@
 import React,{FC} from 'react';
 import {scopedClass} from '../helper/scopedClass';
 import './scroll.scss';
-import {GetScrollPropsMap} from './hooks/useScrollBarPos';
+import {GetScrollPropsMap} from './hooks/useScroll';
 
 interface ScrollProps{
   whenPullingReactNode?:React.ReactNode

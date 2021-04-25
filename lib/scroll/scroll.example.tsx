@@ -1,20 +1,19 @@
-import React,{FC,useEffect,useRef,useState} from 'react';
+import React,{FC,useEffect,useState} from 'react';
 import Scroll from './scroll';
-import useScrollBarPos from './hooks/useScrollBarPos';
-import useTimeout from '../hooks/useTimeout';
+import useScroll from './hooks/useScroll';
 
 interface scrollExampleProps {
 
 }
-
+let timer = 0
 const request = ():Promise<{name:string,age:number}[]> => {
   return new Promise((resolve, reject)=>{
-    setTimeout(()=>{
+    timer = setTimeout(()=>{
       const a = new Array(40).fill({
         name: '小明',age: Math.floor(Math.random()*100)
       })
       resolve(a)
-    },500)
+    },1000)
   })
 };
 const scrollExample: FC<scrollExampleProps> = (props) => {
@@ -27,11 +26,12 @@ const scrollExample: FC<scrollExampleProps> = (props) => {
       setLoading(false)
     })
   },[])
-  const {getScrollPropsMap,status} = useScrollBarPos({
-    upGlideLoading: loading,dropDownUpdating: loading,disableDropDownUpdate:false,enableUpGlideLoad:true,onEvent: () => {
+  const {getScrollPropsMap,status} = useScroll({
+    upGlideLoading: loading,pullDownUpdating: loading,disablePullDownUpdate:false,enableUpGlideLoad:true,onEvent: () => {
       return {
-        onCancelUpdate: () => {
+        onCanceledUpdating: () => {
           console.log('cancel');
+          clearTimeout(timer)
         },
         onUpdating: () => {
           setLoading(true);
