@@ -1,0 +1,25 @@
+@import 'global.scss';
+
+$demo-border-color: $accents-2;
+
+.makabaka-demo {
+  &-card {
+    border: 1px solid $demo-border-color;
+  }
+  &-displayComponent-view {
+    padding: 1.2em 1.5em;
+    border-bottom: 1px solid $demo-border-color;
+  }
+  &-display-code-view {
+    border-bottom: 1px solid $demo-border-color;
+    transition: 0.25s;
+    overflow: hidden;
+  }
+  &-description{
+    padding: 1em;
+  }
+  &-code{
+    padding: 1em;
+  }
+
+}
