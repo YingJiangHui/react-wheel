@@ -4,7 +4,7 @@ const useTimeout= ()=>{
   
   const timerRef = useRef<Map<string|number,number>>(new Map())
   const setTimeout = (key:string|number,handler: TimerHandler, timeout?: number, ...args: any[]):number=>{
-    clearTimeout(timerRef.current.get(key))
+    clearTimeout(key)
     timerRef.current.set(key,window.setTimeout(handler,timeout,...args))
     return timerRef.current.get(key)||-1
   }
@@ -15,7 +15,7 @@ const useTimeout= ()=>{
       });
     }
   },[])
-  const clearTimeout = (key:string)=>{
+  const clearTimeout = (key:string|number)=>{
     window.clearTimeout(timerRef.current.get(key))
   }
   return {setTimeout,clearTimeout}
