@@ -24,6 +24,8 @@ $accents-7: #333;
 $accents-8: #111;
 $accents-9: #000;
 
+$accents-list: $accents-1 $accents-2 $accents-3 $accents-4 $accents-5 $accents-6 $accents-7 $accents-8 $accents-9;
+
 $header-height: 64px;
 $bar-link-size: 14px;
 $bar-link-lineHeight: 24px;
@@ -43,7 +45,16 @@ a{
   text-decoration: none;
   color: #000;
 }
-
+@for $i from 6 through 1 {
+  h#{$i}{
+    padding-top: calc( 28px - (#{$i}px * 2) );
+    padding-bottom: calc( 28px - (#{$i}px * 2) );
+  }
+}
+p{
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
 .docContainer{
   max-width:$geist-max-width-docPage;
   margin: 0 auto;
