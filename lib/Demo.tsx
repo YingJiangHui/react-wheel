@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import useClassName from './hooks/useClassName';
 import './demo.scss';
 import Icon from './icon/Icon';
+import Line from './line/line';
 
 
 const Pre = styled.pre`
@@ -13,7 +14,7 @@ const Pre = styled.pre`
   overflow: scroll;
 `;
 
-const Line = styled.div`
+const Row = styled.div`
   display: table-row;
 `;
 
@@ -37,12 +38,12 @@ const CodeComponent: React.FC<CodeProps> = ({code}) => {
   return (<Highlight {...defaultProps} theme={theme} code={code} language="jsx">
     {({className,style,tokens,getLineProps,getTokenProps}) => (
       <Pre className={className} style={{overflow: 'auto',padding: '1em 0.5em',...style}}>
-        {tokens.map((line,i) => (<Line key={i} {...getLineProps({line,key: i})}>
+        {tokens.map((line,i) => (<Row key={i} {...getLineProps({line,key: i})}>
             <LineNo>{i + 1}</LineNo>
             <LineContent>
               {line.map((token,key) => (<span key={key} {...getTokenProps({token,key})} />))}
             </LineContent>
-          </Line>))}
+          </Row>))}
       </Pre>)}
   </Highlight>);
 };
@@ -91,7 +92,7 @@ const Demo: React.FC<DemoProps> = (props) => {
       <h2 className={classNames({classes: ['title']})}>
         <a href={`#${title}`}>{title}</a>
       </h2>
-      
+      <Line/>
       <p className={classNames({classes: ['detail']})}>{detail}</p>
       <DemoBox code={code} description={description}>
         {children}
