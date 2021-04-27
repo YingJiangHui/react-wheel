@@ -89,9 +89,9 @@ const Demo: React.FC<DemoProps> = (props) => {
   const {code,description,detail,children,title} = props;
   const {classNames} = useClassName({prefix: 'makabaka-demo'});
   return (<div>
-      <h2 className={classNames({classes: ['title']})}>
-        <a href={`#${title}`}>{title}</a>
-      </h2>
+      <h3 className={classNames({classes: ['title']})}>
+        <a href={`/#${title}`}>{title}</a>
+      </h3>
       <Line/>
       <p className={classNames({classes: ['detail']})}>{detail}</p>
       <DemoBox code={code} description={description}>
