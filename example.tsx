@@ -2,7 +2,6 @@ import React from 'react';
 import {HashRouter as Router, Route, NavLink} from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import IconExample from './lib/icon/icon.example';
-import ButtonExample from './lib/button/button.example';
 import DialogExample from './lib/dialog/dialog.example'
 import {Layout, Header, Content, Aside, Footer } from './lib/layout/Layout';
 import './global.scss'
@@ -13,6 +12,7 @@ import GridDemo from './lib/grid/grid.demo';
 import {Icon} from './lib';
 import useHomeService from './service/useHomeService';
 import useClassName from "./lib/hooks/useClassName";
+import ButtonDemo from './lib/button/button.demo';
 
 const App: React.FC = () => {
   const {onClickSideBar,asideVisible,windowInnerWidth} = useHomeService()
@@ -49,7 +49,7 @@ const App: React.FC = () => {
             <Content className="docContent">
               <div>
                 <Route component={IconExample} path={'/icon'}/>
-                <Route component={ButtonExample} path={'/button'}/>
+                <Route component={ButtonDemo} path={'/button'}/>
                 <Route component={DialogExample} path={'/dialog'}/>
                 <Route component={LayoutDemo} path={'/layout'}/>
                 <Route component={FormExample} path={'/form'}/>
