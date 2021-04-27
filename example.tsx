@@ -13,6 +13,7 @@ import {Icon} from './lib';
 import useHomeService from './service/useHomeService';
 import useClassName from "./lib/hooks/useClassName";
 import ButtonDemo from './lib/button/button.demo';
+import LineDemo from './lib/line/line.demo';
 
 const App: React.FC = () => {
   const {onClickSideBar,asideVisible,windowInnerWidth} = useHomeService()
@@ -26,6 +27,7 @@ const App: React.FC = () => {
     }
     <div className="docNavLinks">
       <NavLink to='/icon'>Icon</NavLink>
+      <NavLink to={'/line'}>Line</NavLink>
       <NavLink to={'/button'}>Button</NavLink>
       <NavLink to={'/dialog'}>Dialog</NavLink>
       <NavLink to={'/layout'}>Layout</NavLink>
@@ -49,6 +51,7 @@ const App: React.FC = () => {
             <Content className="docContent">
               <div>
                 <Route component={IconExample} path={'/icon'}/>
+                <Route component={LineDemo} path={'/line'}/>
                 <Route component={ButtonDemo} path={'/button'}/>
                 <Route component={DialogExample} path={'/dialog'}/>
                 <Route component={LayoutDemo} path={'/layout'}/>
