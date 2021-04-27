@@ -7,7 +7,7 @@ interface LineProps {
 }
 
 const Line:FC<LineProps> = (props)=>{
-    const {grayLevel=2,className} = props
+    const {grayLevel=3,className} = props
     const {classNames} = useClassName({prefix:'makabaka-line'})
     return (
     <div className={classNames({extra:[className,'makabaka-line'],classes:[`gray-level-${grayLevel}`]})} />
