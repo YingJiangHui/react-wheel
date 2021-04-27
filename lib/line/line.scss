@@ -1,0 +1,13 @@
+@import "global.scss";
+
+.makabaka-line{
+  height: 1px;
+  width: 100%;
+  $i:1;
+  @each $accents in $accents-list {
+    &-gray-level-#{$i}{
+      background: $accents;
+    }
+    $i:$i+1
+  }
+}
