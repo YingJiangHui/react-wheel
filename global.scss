@@ -37,7 +37,7 @@ p{
   padding-bottom: 1em;
 }
 .docContainer{
-  max-width:$geist-max-width-docPage;
+  max-width: $makabaka-max-width-docPage;
   margin: 0 auto;
   padding-left: 24px;
   padding-right: 24px;
@@ -67,7 +67,7 @@ p{
 .docPage{
   overflow: hidden;
   position: relative;
-  background-color: $geist-background-docPage
+  background-color: $makabaka-background-docPage
 }
 .docMain{
   overflow: hidden;
@@ -148,7 +148,7 @@ p{
       .docSideBar{
         margin-left: calc(-1em - 1px);
         padding-left:calc(1em + 1px);
-        border:1px solid $geist-background-docPage;
+        border:1px solid $makabaka-background-docPage;
         .makabaka-icon{
           transform: translateX(0);
         }
