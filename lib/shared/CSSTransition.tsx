@@ -6,41 +6,56 @@ interface Props {
   enterTime: number,
   leaveTime: number,
   clearTime: number,
-  name:string
+  name: string
 }
 
 const defaultProps = {
-  visible: false,enterTime: 60,leaveTime: 60,clearTime: 60,className: '', name:'transition'
+  visible: false,enterTime: 60,leaveTime: 60,clearTime: 60,className: '',name: 'transition'
 };
 
-// classPrefix-enter
-// classPrefix-enter-active
+// classPrefix-enter 进入
+// classPrefix-enter-active 最终的过渡效果
 // classPrefix-level
 // classPrefix-level-active
 type CSSTransitionProps = Props&typeof defaultProps&React.AllHTMLAttributes<any>
-const CSSTransition: FC<React.PropsWithChildren<CSSTransitionProps>> = ({visible,name,enterTime,leaveTime,clearTime,children}) => {
+const CSSTransition: FC<React.PropsWithChildren<CSSTransitionProps>> = ({visible,name,enterTime,leaveTime,clearTime,children,...props}) => {
   const [renderable,setRenderable] = useState(visible);
-  const [className,setClassName] = useState('')
+  const [className,setClassName] = useState('');
+  
   useEffect(() => {
-    if(visible) setRenderable(true)
-    const status = visible?'enter':'leave'
-    setClassName(`${name}-${status}`)
-    const time = visible?enterTime:leaveTime
+    if (visible && !renderable) setRenderable(true);
+    const status = visible ? 'enter' : 'leave';
+    setClassName(`${name}-${status}`);
+    const time = visible ? enterTime : leaveTime;
     
-    const timer = setTimeout(()=>{
-      setClassName(`${name}-${status} ${name}-${status}-active`)
-      clearTimeout(timer)
-    },time)
+    const timer = setTimeout(() => {
+      setClassName(`${name}-${status} ${name}-${status}-active`);
+      clearTimeout(timer);
+    },time);
+    // leave时隐藏，enter时这个定时器没有效果t(() => {
+    //     //   if (!visible) {
+    //     //     setClassName('');
+    //     //     setRenderable(false);
+    //     //   }
+    //     //   clearTimeout(clearTimer);
+    //     // },time + clearTime);
+    // const clearTimer = setTimeou
     
-    
-    return ()=>{
-      clearTimeout(timer)
-    }
+    return () => {
+      clearTimeout(timer);
+    };
   },[visible,renderable]);
-  if(!visible&&!renderable) return null
-  return (<div className={className}>
-      {children}
-    </div>);
+  if (!React.isValidElement(children) || !renderable) return null;
+  
+  return (React.cloneElement(children,{
+    ...props,className,
+    onTransitionEnd:()=>{
+      if (!visible) {
+        setClassName('');
+        setRenderable(false);
+      }
+    }
+  }));
 };
 
 export default withDefaults(CSSTransition,defaultProps);
