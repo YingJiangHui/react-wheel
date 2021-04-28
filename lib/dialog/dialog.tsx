@@ -33,24 +33,15 @@ const Dialog: React.FC<Props> = ({children,visible,title,onClose,clickMaskClose,
       </div>
     </> : ''}
   </>,document.querySelector('body') as HTMLElement);
-}
-;
-Dialog.defaultProps =
-{
+};Dialog.defaultProps = {
   clickMaskClose: true
-}
-;
+};
 
 /*modal
-* 嵌入HTML元素
-* */
+ * 嵌入HTML元素
+ * */
 
-const modal = (
-{content, yes, no, title, buttons, clickMaskClose = true}
-:
-{ content: React.ReactNode, title ? : string, buttons ? : Array < ReactElement >, no ? : () => void, yes ? : () => void , clickMaskClose ? : boolean}
-) =>
-{
+const modal = ({content,yes,no,title,buttons,clickMaskClose = true}: {content: React.ReactNode,title?: string,buttons?: Array<ReactElement>,no?: () => void,yes?: () => void,clickMaskClose?: boolean}) => {
   const onYes = () => {
     close();
     yes?.();
@@ -76,17 +67,11 @@ const modal = (
                             onClose={close}>{content}</Dialog>;
   ReactDOM.render(component,div);
   return close;
-}
-;
+};
 /*confirm
-* 确定或取消
-* */
-const confirm = (
-{content, yes, title, no, clickMaskClose = true}
-:
-{ content: string, title ? : string, buttons ? : Array < ReactElement >, no ? : () => void, yes ? : () => void , clickMaskClose ? : boolean}
-) =>
-{
+ * 确定或取消
+ * */
+const confirm = ({content,yes,title,no,clickMaskClose = true}: {content: string,title?: string,buttons?: Array<ReactElement>,no?: () => void,yes?: () => void,clickMaskClose?: boolean}) => {
   const onYes = () => {
     close();
     yes?.();
@@ -99,18 +84,12 @@ const confirm = (
                            full>yes</Button>,
     <Button onClick={onNo} className={sc('button')} data-test-no="toggle">no</Button>];
   const close = modal({content,yes,title,no,buttons,clickMaskClose});
-}
-;
+};
 /*
-* alert
-* 只有确定按钮
-* */
-const alert = (
-{content, yes, clickMaskClose = false, title}
-:
-{ content: string, title ? : string, buttons ? : Array < ReactElement >, yes ? : () => void , clickMaskClose ? : boolean}
-) =>
-{
+ * alert
+ * 只有确定按钮
+ * */
+const alert = ({content,yes,clickMaskClose = false,title}: {content: string,title?: string,buttons?: Array<ReactElement>,yes?: () => void,clickMaskClose?: boolean}) => {
   const onYes = () => {
     close();
     yes && yes();
@@ -118,9 +97,9 @@ const alert = (
   const buttons = [<Button onClick={onYes} className={sc('button')} data-test-yes="toggle" type='primary'
                            full>yes</Button>];
   const close = modal({content,yes,buttons,title,clickMaskClose});
+};
+export {
+  modal,confirm,alert
 }
-;
-export
-{modal, confirm, alert}
-;
+  ;
 export default Dialog;
