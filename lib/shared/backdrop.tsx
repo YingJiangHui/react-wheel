@@ -13,7 +13,7 @@ const defaultProps = {
 };
 type BackdropProps = Props&typeof defaultProps&HTMLAttributes<any>
 
-const Backdrop: FC<React.PropsWithChildren<BackdropProps>> = ({width,visible,onClick}) => {
+const Backdrop: FC<React.PropsWithChildren<BackdropProps>> = ({width,visible,onClick,children}) => {
   const isContentMouseDownRef = useRef<boolean>(false);
   const clickHandle = (e: React.MouseEvent<HTMLDivElement,MouseEvent>) => {
     if (isContentMouseDownRef.current) return;
@@ -35,7 +35,7 @@ const Backdrop: FC<React.PropsWithChildren<BackdropProps>> = ({width,visible,onC
   return (<CSSTransition name="backdrop" visible={visible}>
     <div className='makabaka-backdrop' onClick={clickHandle} onMouseUp={mouseUpHandle}>
       <div className='layer'/>
-      <div className='content' onMouseDown={childrenMouseDownHandle} onClick={childrenClickHandle}/>
+      <div className='content' onMouseDown={childrenMouseDownHandle} onClick={childrenClickHandle}>{children}</div>
       <style jsx>{`
         .makabaka-backdrop {
           z-index: 1000;
