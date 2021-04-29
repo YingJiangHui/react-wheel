@@ -1,6 +1,6 @@
 import React,{FC,useState} from 'react';
 import CSSTransition from './CSSTransition';
-import Backdrop from './backdrop';
+import {Modal} from '../modal';
 interface SharedDemoProps {
 
 }
@@ -8,7 +8,7 @@ interface SharedDemoProps {
 const SharedDemo: FC<SharedDemoProps> = (props) => {
   const [visible,setVisible] = useState(false);
   return <div>
-    <Backdrop visible={visible} onClick={()=>{setVisible(false)}}/>
+    <Modal visible={visible}>123123</Modal>
     <button onClick={() => setVisible(v => !v)}>click</button>
     <CSSTransition clearTime={5000} visible={visible} name="box">
       <div className="box">
