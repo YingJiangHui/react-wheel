@@ -50,7 +50,6 @@ const CSSTransition: FC<React.PropsWithChildren<CSSTransitionProps>> = ({visible
   if (!React.isValidElement(children) || !renderable) return null;
   return React.cloneElement(children,{
     ...props,className: `${className} ${children.props.className} ${classes}`,onTransitionEnd: (e:TransitionEvent) => {
-      children.props.onTransitionEnd(e);
       // 没设置clearTime时执行
       if (!visible && !clearTime) {
         setClasses('');
