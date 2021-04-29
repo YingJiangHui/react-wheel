@@ -1,6 +1,6 @@
 import React,{FC,useState} from 'react';
 import CSSTransition from './CSSTransition';
-import 'styled-jsx'
+import Backdrop from './backdrop';
 interface SharedDemoProps {
 
 }
@@ -8,6 +8,7 @@ interface SharedDemoProps {
 const SharedDemo: FC<SharedDemoProps> = (props) => {
   const [visible,setVisible] = useState(false);
   return <div>
+    <Backdrop visible={visible} onClick={()=>{setVisible(false)}}/>
     <button onClick={() => setVisible(v => !v)}>click</button>
     <CSSTransition clearTime={5000} visible={visible} name="box">
       <div className="box">
@@ -19,7 +20,7 @@ const SharedDemo: FC<SharedDemoProps> = (props) => {
           position: absolute;
           left: 50%;
           top: 50%;
-            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0s,
+          transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0s,
               transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0s;
         }
         
