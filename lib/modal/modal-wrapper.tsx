@@ -7,8 +7,8 @@ interface Props {
 }
 type modalWrapperProps = Props
 const ModalWrapper: FC<React.PropsWithChildren<modalWrapperProps>> = ({children}) => {
-  const {visible,pos} = useContext(ModalContext)
-  console.log(pos);
+  const {visible,getOriginTransition} = useContext(ModalContext)
+  console.log(getOriginTransition())
   return (<CSSTransition name='modal-wrapper' visible={visible}>
     <div className='modal-wrapper'>
       {children}
@@ -17,7 +17,7 @@ const ModalWrapper: FC<React.PropsWithChildren<modalWrapperProps>> = ({children}
           background-color: #fff;
           transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1) 0s,
           transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0s;
-          transform-origin: 10px - 10px;
+          transform-origin: ${getOriginTransition().map((pos)=>pos+'px').join(" ")};
         }
         
         .modal-wrapper-enter {
