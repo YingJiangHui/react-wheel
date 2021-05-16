@@ -8,7 +8,7 @@ interface scrollExampleProps {
 let timer = 0
 const request = ():Promise<{name:string,age:number}[]> => {
   return new Promise((resolve, reject)=>{
-    timer = setTimeout(()=>{
+    timer = window.setTimeout(()=>{
       const a = new Array(40).fill({
         name: '小明',age: Math.floor(Math.random()*100)
       })
