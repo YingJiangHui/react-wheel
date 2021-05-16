@@ -9,27 +9,31 @@ Array [
   <div
     className="makabaka-dialog-wrapper"
   >
-    <button
-      className="makabaka-dialog-close"
+    <div
+      className="makabaka-dialog"
     >
-      <svg
-        className="makabaka-icon"
+      <button
+        className="makabaka-dialog-close"
       >
-        <use
-          xlinkHref="#close"
-        />
-      </svg>
-    </button>
-    <header
-      className="makabaka-dialog-header"
-    >
-      title
-    </header>
-    <main
-      className="makabaka-dialog-body"
-    >
-      content
-    </main>
+        <svg
+          className="makabaka-icon"
+        >
+          <use
+            xlinkHref="#close"
+          />
+        </svg>
+      </button>
+      <header
+        className="makabaka-dialog-header"
+      >
+        title
+      </header>
+      <main
+        className="makabaka-dialog-body"
+      >
+        content
+      </main>
+    </div>
   </div>,
 ]
 `;
