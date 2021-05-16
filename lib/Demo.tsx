@@ -49,7 +49,7 @@ const CodeComponent: React.FC<CodeProps> = ({code}) => {
 };
 
 interface DemoBoxProps extends CodeProps {
-  description: React.ReactNode
+  description?: React.ReactNode
 }
 
 const DemoBox: React.FC<DemoBoxProps> = ({code,children,description}) => {
@@ -81,8 +81,8 @@ const DemoBox: React.FC<DemoBoxProps> = ({code,children,description}) => {
 };
 
 interface DemoProps extends DemoBoxProps {
-  detail: string,
-  title: string,
+  detail?: string,
+  title?: string,
 }
 
 const Demo: React.FC<DemoProps> = (props) => {

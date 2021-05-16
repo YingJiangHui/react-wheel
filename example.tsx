@@ -19,7 +19,6 @@ import SharedDemo from './lib/shared/shared.demo';
 const App: React.FC = () => {
   const {onClickSideBar,asideVisible,windowInnerWidth} = useHomeService()
   const {classNames} = useClassName()
-  console.log(windowInnerWidth)
   const asideDom = (<Aside className={classNames({map:{"openAside":asideVisible},extra:['docAside']})}>
     {windowInnerWidth<=500&&(asideVisible?
       <div className="docSideBar" onClick={onClickSideBar}><Icon name={'side-bar-close'}/></div>
