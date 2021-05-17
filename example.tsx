@@ -14,7 +14,7 @@ import useHomeService from './service/useHomeService';
 import useClassName from "./lib/hooks/useClassName";
 import ButtonDemo from './lib/button/button.demo';
 import LineDemo from './lib/line/line.demo';
-import SharedDemo from './lib/shared/shared.demo';
+import ModalDemo from './lib/modal/modal.demo';
 
 const App: React.FC = () => {
   const {onClickSideBar,asideVisible,windowInnerWidth} = useHomeService()
@@ -34,7 +34,7 @@ const App: React.FC = () => {
       <NavLink to={'/form'}>Form</NavLink>
       <NavLink to={'/scroll'}>Scroll</NavLink>
       <NavLink to={'/grid'}>Grid</NavLink>
-      <NavLink to={'/shared'}>shared</NavLink>
+      <NavLink to={'/modal'}>modal</NavLink>
     </div>
   </Aside>)
 
@@ -59,7 +59,7 @@ const App: React.FC = () => {
                 <Route component={FormExample} path={'/form'}/>
                 <Route component={ScrollExample} path={'/scroll'}/>
                 <Route component={GridDemo} path={'/grid'}/>
-                <Route component={SharedDemo} path={'/shared'}/>
+                <Route component={ModalDemo} path={'/modal'}/>
               </div>
             </Content>
           </Layout>

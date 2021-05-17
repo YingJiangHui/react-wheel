@@ -10,16 +10,18 @@ import Backdrop from '../shared/backdrop';
 import usePortal from '../utils/usePortal';
 
 interface Props {
-  visible?: boolean
+  visible: boolean,
+  onClose?:()=>void
 }
 
 const defaultProps = {visible: false};
 export type ModalProps = Props&typeof defaultProps&React.AllHTMLAttributes<any>
-const Modal: FC<React.PropsWithChildren<ModalProps>> = ({children,visible}) => {
-  const modalService = useModalService({visible})
+const Modal: FC<React.PropsWithChildren<ModalProps>> = ({children,visible,onClose}) => {
+  const modalService = useModalService({visible,onClose})
   const portal = usePortal()
+
   return ReactDOM.createPortal(<ModalContext.Provider value={modalService}>
-    <Backdrop width="320px" visible={modalService.visible} onClick={()=>{modalService.close()}}>
+    <Backdrop width="320px" visible={modalService.visible} onClick={modalService.emitCloseEvent}>
       <ModalWrapper>{children}</ModalWrapper>
     </Backdrop>
   </ModalContext.Provider>,portal);
