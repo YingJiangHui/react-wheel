@@ -79,7 +79,7 @@ p{
 .docAside{
   border-right: 1px solid $border-color;
   top: 0;
-  width: 222px;
+  min-width: $makabaka-min-width-docAside;
   background: #fff;
   >.docNavLinks {
     display: flex;
@@ -98,6 +98,7 @@ p{
 }
 
 .docContent{
+  max-width: calc( #{$makabaka-max-width-docPage} - #{$makabaka-min-width-docAside});
   padding: 0 24px;
 }
 
