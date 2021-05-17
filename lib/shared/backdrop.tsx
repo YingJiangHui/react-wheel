@@ -65,12 +65,12 @@ const Backdrop: FC<React.PropsWithChildren<BackdropProps>> = ({width,visible,onC
         .content {
           display: inline-block;
           position: relative;
-          height: 100px;
           z-index: 1001;
           vertical-align: middle;
           width: ${width};
           margin: 20px auto;
           max-width: 520px;
+
         }
         
         .makabaka-backdrop:before {

@@ -1,14 +1,19 @@
-import React,{FC} from 'react'
+import React,{FC} from 'react';
 
-interface ModalActionsProps {
+type Props = {}
+const defaultProps = {};
+type ModalActionsProps = Props&typeof defaultProps
 
-}
+const ModalActions: FC<ModalActionsProps> = ({children}) => {
+  
+  return (<footer>
+    {children}
+    <style jsx>{`
+      footer {
+        display: flex;
+      }
+    `}</style>
+  </footer>);
+};
 
-const ModalActions:FC<ModalActionsProps> = (props)=>{
-    
-    return (
-    <></>
-    )
-}
-
-export default ModalActions
+export default ModalActions;

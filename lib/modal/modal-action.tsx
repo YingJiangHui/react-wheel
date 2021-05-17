@@ -1,14 +1,20 @@
-import React,{FC} from 'react'
+import React,{FC} from 'react';
+import Button from '../button/button';
 
-interface ModalActionProps {
+type Props = {}
+const defaultProps = {};
+type ModalActionProps = Props&typeof defaultProps
 
-}
+const ModalAction: FC<ModalActionProps> = ({children}) => {
+  
+  return (<>
+    <Button className="modal-action">{children}</Button>
+    <style jsx>{`
+      .modal-action{
+        flex-grow: 1;
+      }
+    `}</style>
+  </>);
+};
 
-const ModalAction:FC<ModalActionProps> = (props)=>{
-    
-    return (
-    <></>
-    )
-}
-
-export default ModalAction
+export default ModalAction;
