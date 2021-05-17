@@ -8,4 +8,10 @@ describe('测试icon', () => {
     const json = renderer.create(<Icon name={'pay'}/>).toJSON()
     expect(json).toMatchSnapshot()
   })
+  it('点击icon', () => {
+    const fn = jest.fn()
+    const component = mount(<Icon name={'pay'} onClick={fn}/>)
+    component.find('svg').simulate('click')
+    expect(fn).toBeCalled()
+  })
 })
