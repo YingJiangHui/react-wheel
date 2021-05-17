@@ -27,7 +27,6 @@ const Modal: FC<React.PropsWithChildren<ModalProps>> = ({children,visible,onClos
   </ModalContext.Provider>,portal);
 };
 type ModalComponent<P = {}> = React.FC<P>&{
-  Title: typeof ModalTitle,Action: typeof ModalAction,Actions: typeof ModalActions
-  Content: typeof ModalContent
+  Title: typeof ModalTitle,Action: typeof ModalAction,Actions: typeof ModalActions,Content: typeof ModalContent
 }
 export default Modal as ModalComponent<ModalProps>;

@@ -14,6 +14,10 @@ const ModalWrapper: FC<React.PropsWithChildren<modalWrapperProps>> = ({children}
       {children}
       <style jsx>{`
         .modal-wrapper {
+          display: flex;
+          flex-direction: column;
+          border-radius: 8px;
+          overflow: hidden;
           background-color: #fff;
           transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0s,
           transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0s;

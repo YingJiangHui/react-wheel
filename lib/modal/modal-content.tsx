@@ -10,8 +10,9 @@ const ModalContent: FC<ModalContentProps> = ({children}) => {
     {children}
     <style jsx>{`
       .modal-content{
-        margin-left: 1em;
-        margin-right: 1em;
+        padding: 0.6em 2em;
+        text-align: left;
+        min-height: 5em;
       }
     `}</style>
   </div>);
