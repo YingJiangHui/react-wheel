@@ -4,9 +4,6 @@ type Props = {}
 const defaultProps = {};
 type ModalActionsProps = Props&typeof defaultProps
 const ModalActions: FC<ModalActionsProps> = ({children}) => {
-  console.log(Array.isArray(children) && children.filter((child) => React.isValidElement(child)).length === children.length);
-  
-  // [React.cloneElement(children[0])].concat(React.cloneElement(children[children.length-1]))
   return (<>
     <div className={'modal-footer-shim'}>
       <style jsx>{`

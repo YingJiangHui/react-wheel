@@ -12,13 +12,14 @@ import ModalSubTitle from './modal-sub-title';
 
 interface Props {
   visible: boolean,
-  onClose?:()=>void
+  onClose?:()=>void,
+  confirmLoading?:boolean,
 }
 
-const defaultProps = {visible: false};
-export type ModalProps = Props&typeof defaultProps&React.AllHTMLAttributes<any>
-const Modal: FC<React.PropsWithChildren<ModalProps>> = ({children,visible,onClose}) => {
-  const modalService = useModalService({visible,onClose})
+const defaultProps = {visible: false,confirmLoading: false};
+export type ModalProps = Props & typeof defaultProps & React.AllHTMLAttributes<any>
+const Modal: FC<React.PropsWithChildren<ModalProps>> = ({children,...serviceProps}) => {
+  const modalService = useModalService(serviceProps)
   const portal = usePortal()
 
   return ReactDOM.createPortal(<ModalContext.Provider value={modalService}>

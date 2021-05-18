@@ -1,14 +1,15 @@
 import useToken from '../hooks/useToken';
 import {useCallback,useEffect,useState} from 'react';
-type UseModalServiceProps = {visible?:boolean,onClose?:()=>void}
+type UseModalServiceProps = {visible?:boolean,onClose?:()=>void,confirmLoading?:boolean}
 const defaultProps:UseModalServiceProps = {visible:false}
-const useModalService = ({visible:_v,onClose}:UseModalServiceProps = defaultProps)=>{
+const useModalService = ({visible:_v,onClose,confirmLoading}:UseModalServiceProps = defaultProps)=>{
   const [visible,setVisible] = useState(_v)
   useEffect(()=>{
-    setVisible(_v)
-  },[_v])
+    if(!confirmLoading)
+      setVisible(_v)
+  },[_v,confirmLoading])
   const emitCloseEvent = useCallback( ()=>{
-    onClose?.()
+    !confirmLoading&&onClose?.()
   },[])
   return {visible,setVisible,emitCloseEvent} as const
 }
