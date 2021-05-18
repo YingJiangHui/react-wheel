@@ -12,7 +12,8 @@ const ModalExample1:FC<ModalExample1Props> = ()=>{
       <>
         <Button onClick={()=>{setVisible(true)}}>visible</Button>
           <Modal visible={visible} onClose={()=>{setVisible(false)}}>
-            <Modal.Title>title</Modal.Title>
+            <Modal.Title>Modal Title</Modal.Title>
+            <Modal.SubTitle>sub title</Modal.SubTitle>
             <Modal.Content>content</Modal.Content>
             <Modal.Actions>
               <Modal.Action>no</Modal.Action>

@@ -8,6 +8,7 @@ import useModalService,{ModalContext} from './useModalService';
 import ModalWrapper from './modal-wrapper';
 import Backdrop from '../shared/backdrop';
 import usePortal from '../utils/usePortal';
+import ModalSubTitle from './modal-sub-title';
 
 interface Props {
   visible: boolean,
@@ -21,12 +22,12 @@ const Modal: FC<React.PropsWithChildren<ModalProps>> = ({children,visible,onClos
   const portal = usePortal()
 
   return ReactDOM.createPortal(<ModalContext.Provider value={modalService}>
-    <Backdrop width="320px" visible={modalService.visible} onClick={modalService.emitCloseEvent}>
-      <ModalWrapper>{children}</ModalWrapper>
-    </Backdrop>
+      <Backdrop width="396px" visible={modalService.visible} onClick={modalService.emitCloseEvent}>
+        <ModalWrapper>{children}</ModalWrapper>
+      </Backdrop>
   </ModalContext.Provider>,portal);
 };
 type ModalComponent<P = {}> = React.FC<P>&{
-  Title: typeof ModalTitle,Action: typeof ModalAction,Actions: typeof ModalActions,Content: typeof ModalContent
+  Title: typeof ModalTitle,Action: typeof ModalAction,Actions: typeof ModalActions,Content: typeof ModalContent,SubTitle: typeof  ModalSubTitle
 }
 export default Modal as ModalComponent<ModalProps>;

@@ -8,10 +8,10 @@ const ModalAction: FC<ModalActionProps> = ({children}) => {
   return (<Button className="modal-action">{children}
       <style jsx>{`
         .modal-action {
-          border: none;
+          font-size: 14px;
+          color: #666;
+          padding: 1em 0;
           flex-grow: 1;
-          border-right: 1px solid #dadada;
-          margin-right: -1px;
         }
       `}</style>
     </Button>);

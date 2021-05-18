@@ -14,6 +14,7 @@ const ModalWrapper: FC<React.PropsWithChildren<modalWrapperProps>> = ({children}
       {children}
       <style jsx>{`
         .modal-wrapper {
+          padding: 22px;
           display: flex;
           flex-direction: column;
           border-radius: 8px;

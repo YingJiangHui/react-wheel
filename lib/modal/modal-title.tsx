@@ -6,17 +6,17 @@ type ModalTitleProps = Props&typeof defaultProps
 
 const ModalTitle: FC<ModalTitleProps> = ({children}) => {
   
-  return (<div>
-    <h3 className='modal-title'>{children}</h3>
+  return (<h2 className='modal-title'>{children}
     <style jsx={true}>{`
       .modal-title {
-        font-size: 22px;
-        padding-top: 0.6em;
-        padding-bottom: 0.6em;
+        line-height: 1.6;
+        font-size: 1.6rem;
         text-align: center;
+        font-weight: normal;
+        padding: 0;
       }
     `}</style>
-  </div>);
+  </h2>);
 };
 
 export default ModalTitle;
