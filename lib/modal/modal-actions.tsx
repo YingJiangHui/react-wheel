@@ -1,4 +1,5 @@
 import React,{FC} from 'react';
+import withDefaults from '../utils/with-defaults';
 
 type Props = {}
 const defaultProps = {};
@@ -39,4 +40,4 @@ const ModalActions: FC<ModalActionsProps> = ({children}) => {
   </>);
 };
 
-export default ModalActions;
+export default withDefaults(ModalActions,defaultProps) ;

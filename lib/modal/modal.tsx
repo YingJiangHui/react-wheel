@@ -9,6 +9,7 @@ import ModalWrapper from './modal-wrapper';
 import Backdrop from '../shared/backdrop';
 import usePortal from '../utils/usePortal';
 import ModalSubTitle from './modal-sub-title';
+import withDefaults from '../utils/with-defaults';
 
 interface Props {
   visible: boolean,
@@ -31,4 +32,4 @@ const Modal: FC<React.PropsWithChildren<ModalProps>> = ({children,...serviceProp
 type ModalComponent<P = {}> = React.FC<P>&{
   Title: typeof ModalTitle,Action: typeof ModalAction,Actions: typeof ModalActions,Content: typeof ModalContent,SubTitle: typeof  ModalSubTitle
 }
-export default Modal as ModalComponent<ModalProps>;
+export default withDefaults(Modal,defaultProps) as ModalComponent<ModalProps>;
