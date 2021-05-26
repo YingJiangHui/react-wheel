@@ -24,8 +24,18 @@ module.exports = {
         loader: "svg-sprite-loader"
       },
       {
-        test: /\.scss/,
-        loader: ["style-loader", "css-loader", "sass-loader"]
+        test: /\.scss$/,
+        loader: ["style-loader", {
+          loader: "css-loader",
+          options:{
+            modules: {
+              compileType: "module",
+              auto: true,
+              mode:'local',
+              // localIdentName: "[path][name]__[local]--[hash:base64:5]",
+            }
+          }
+        }, "sass-loader"]
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
